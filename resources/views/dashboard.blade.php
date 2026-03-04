@@ -66,6 +66,11 @@
         .status-online { color: #16a34a; }
         .status-warning { color: #d97706; }
         
+        .loading-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #ffffff; display: flex; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.8s ease-in-out; }
+        .loading-screen.hide { opacity: 0; pointer-events: none; }
+        .spinner { width: 60px; height: 60px; border: 5px solid #f1f5f9; border-top-color: #1e293b; border-radius: 50%; animation: spin 3s ease-in-out infinite; box-shadow: 0 0 20px rgba(30, 41, 59, 0.1); }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
         @media (max-width: 768px) {
             .sidebar { transform: translateX(-100%); }
             .main-content { margin-left: 0; }
@@ -75,12 +80,19 @@
     </style>
 </head>
 <body>
+    <div class="loading-screen" id="loadingScreen">
+        <div style="text-align: center;">
+            <div class="spinner"></div>
+            <p style="margin-top: 1.5rem; color: #1e293b; font-size: 0.875rem; font-weight: 500; letter-spacing: 0.5px;">Loading Dashboard...</p>
+        </div>
+    </div>
+
     <nav class="navbar">
         <h1><i class="fas fa-chart-line" style="color: #3b82f6; margin-right: 0.5rem;"></i>Dashboard</h1>
         <div class="user-info">
             <div class="user-avatar">{{ substr(Auth::user()->name, 0, 1) }}</div>
             <span class="user-name">{{ Auth::user()->name }}</span>
-            <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
+            <form method="POST" action="{{ route('logout') }}" style="margin: 0;" onsubmit="showLogoutAnimation(event)">
                 @csrf
                 <button type="submit" class="logout-btn">
                     <i class="fas fa-sign-out-alt"></i>logout
@@ -209,5 +221,32 @@
             </div>
         </div>
     </div>
+
+    <div class="loading-screen" id="logoutScreen" style="display: none;">
+        <div style="text-align: center;">
+            <div class="spinner"></div>
+            <p style="margin-top: 1.5rem; color: #1e293b; font-size: 0.875rem; font-weight: 500; letter-spacing: 0.5px;">Logging out...</p>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                document.getElementById('loadingScreen').classList.add('hide');
+                setTimeout(() => {
+                    document.getElementById('loadingScreen').style.display = 'none';
+                }, 800);
+            }, 300);
+        });
+
+        function showLogoutAnimation(event) {
+            event.preventDefault();
+            const logoutScreen = document.getElementById('logoutScreen');
+            logoutScreen.style.display = 'flex';
+            setTimeout(() => {
+                event.target.submit();
+            }, 800);
+        }
+    </script>
 </body>
 </html>

@@ -60,6 +60,11 @@
         .toast.error { border-left: 4px solid #ef4444; }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         
+        .loading-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #ffffff; display: flex; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.8s ease-in-out; }
+        .loading-screen.hide { opacity: 0; pointer-events: none; }
+        .spinner { width: 60px; height: 60px; border: 5px solid #f1f5f9; border-top-color: #1e293b; border-radius: 50%; animation: spin 3s ease-in-out infinite; box-shadow: 0 0 20px rgba(30, 41, 59, 0.1); }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
         /* Responsive Styles */
         @media (max-width: 768px) {
             .navbar { padding: 0.75rem; }
@@ -112,6 +117,13 @@
     </style>
 </head>
 <body>
+    <div class="loading-screen" id="loadingScreen">
+        <div style="text-align: center;">
+            <div class="spinner"></div>
+            <p style="margin-top: 1.5rem; color: #1e293b; font-size: 0.875rem; font-weight: 500; letter-spacing: 0.5px;">Loading Portal...</p>
+        </div>
+    </div>
+
     <nav class="navbar">
         <h1><i class="fas fa-user-clock" style="color: #16a34a; margin-right: 0.5rem;"></i>Employee Portal</h1>
         <div class="user-info" onclick="toggleDropdown()">
@@ -119,7 +131,7 @@
             <span class="user-name">{{ Auth::user()->name }}</span>
             <i class="fas fa-chevron-down chevron" id="chevron"></i>
             <div class="dropdown-menu" id="dropdownMenu" onclick="event.stopPropagation()">
-                <form method="POST" action="{{ route('logout') }}">
+                <form method="POST" action="{{ route('logout') }}" onsubmit="showLogoutAnimation(event)">
                     @csrf
                     <button type="submit" class="dropdown-item">
                         <i class="fas fa-sign-out-alt"></i>
@@ -218,7 +230,32 @@
         <span id="toast-message"></span>
     </div>
 
+    <div class="loading-screen" id="logoutScreen" style="display: none;">
+        <div style="text-align: center;">
+            <div class="spinner"></div>
+            <p style="margin-top: 1.5rem; color: #1e293b; font-size: 0.875rem; font-weight: 500; letter-spacing: 0.5px;">Logging out...</p>
+        </div>
+    </div>
+
     <script>
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                document.getElementById('loadingScreen').classList.add('hide');
+                setTimeout(() => {
+                    document.getElementById('loadingScreen').style.display = 'none';
+                }, 800);
+            }, 300);
+        });
+
+        function showLogoutAnimation(event) {
+            event.preventDefault();
+            const logoutScreen = document.getElementById('logoutScreen');
+            logoutScreen.style.display = 'flex';
+            setTimeout(() => {
+                event.target.submit();
+            }, 800);
+        }
+
         function toggleDropdown() {
             const dropdown = document.getElementById('dropdownMenu');
             const chevron = document.getElementById('chevron');
