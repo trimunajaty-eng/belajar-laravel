@@ -11,10 +11,18 @@
         
         .navbar { background: #ffffff; border-bottom: 1px solid #e2e8f0; padding: 1rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
         .navbar h1 { font-size: 1.25rem; font-weight: 600; color: #1e293b; display: flex; align-items: center; }
-        .user-info { display: flex; align-items: center; gap: 1rem; }
+        .user-info { position: relative; display: flex; align-items: center; gap: 0.5rem; cursor: pointer; padding: 0.5rem; border-radius: 8px; transition: background 0.2s; }
+        .user-info:hover { background: #f8fafc; }
         .user-avatar { width: 36px; height: 36px; border-radius: 8px; background: #16a34a; display: flex; align-items: center; justify-content: center; color: white; font-weight: 500; font-size: 0.875rem; }
         .user-name { font-weight: 500; }
-        .logout-btn { background: #ef4444; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.875rem; font-weight: 500; }
+        .chevron { transition: transform 0.3s; font-size: 0.75rem; color: #64748b; }
+        .chevron.rotate { transform: rotate(180deg); }
+        .dropdown-menu { position: absolute; top: 100%; right: 0; margin-top: 0.5rem; background: white; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); min-width: 200px; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s; }
+        .dropdown-menu.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        .dropdown-menu form { margin: 0; }
+        .dropdown-item { width: 100%; padding: 0.75rem 1rem; border: none; background: none; text-align: left; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; color: #334155; font-size: 0.875rem; transition: background 0.2s; }
+        .dropdown-item:hover { background: #f8fafc; }
+        .dropdown-item i { color: #ef4444; }
         
         .container { max-width: 1200px; margin: 0 auto; padding: 1.5rem; }
         .welcome-card { background: #ffffff; border: 1px solid #e2e8f0; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; }
@@ -59,8 +67,8 @@
             .navbar h1 i { font-size: 1rem; margin-right: 0.25rem; }
             .user-name { display: none; }
             .user-avatar { width: 32px; height: 32px; font-size: 0.75rem; }
-            .user-info { gap: 0.5rem; }
-            .logout-btn { padding: 0.5rem 0.75rem; font-size: 0.75rem; }
+            .user-info { gap: 0.25rem; padding: 0.25rem; }
+            .dropdown-menu { min-width: 150px; }
             
             .container { padding: 1rem; }
             
@@ -92,9 +100,6 @@
         @media (max-width: 480px) {
             .navbar h1 { font-size: 0.875rem; }
             .navbar h1 i { display: none; }
-            .logout-btn { padding: 0.5rem; }
-            .logout-btn i { margin: 0; }
-            .logout-btn span { display: none; }
             
             .welcome-card h2 { font-size: 0.875rem; }
             .welcome-card p { font-size: 0.7rem; }
@@ -109,15 +114,19 @@
 <body>
     <nav class="navbar">
         <h1><i class="fas fa-user-clock" style="color: #16a34a; margin-right: 0.5rem;"></i>Employee Portal</h1>
-        <div class="user-info">
+        <div class="user-info" onclick="toggleDropdown()">
             <div class="user-avatar">{{ substr(Auth::user()->name, 0, 1) }}</div>
             <span class="user-name">{{ Auth::user()->name }}</span>
-            <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
-                @csrf
-                <button type="submit" class="logout-btn">
-                    <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
-                </button>
-            </form>
+            <i class="fas fa-chevron-down chevron" id="chevron"></i>
+            <div class="dropdown-menu" id="dropdownMenu" onclick="event.stopPropagation()">
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="dropdown-item">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </button>
+                </form>
+            </div>
         </div>
     </nav>
 
@@ -208,6 +217,25 @@
         <i class="fas fa-check-circle" style="color: #16a34a; font-size: 1.25rem;"></i>
         <span id="toast-message"></span>
     </div>
+
+    <script>
+        function toggleDropdown() {
+            const dropdown = document.getElementById('dropdownMenu');
+            const chevron = document.getElementById('chevron');
+            dropdown.classList.toggle('show');
+            chevron.classList.toggle('rotate');
+        }
+
+        document.addEventListener('click', function(event) {
+            const userInfo = document.querySelector('.user-info');
+            const dropdown = document.getElementById('dropdownMenu');
+            const chevron = document.getElementById('chevron');
+            if (!userInfo.contains(event.target)) {
+                dropdown.classList.remove('show');
+                chevron.classList.remove('rotate');
+            }
+        });
+    </script>
 
     @if(session('success'))
     <script>
