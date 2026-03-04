@@ -9,6 +9,7 @@ use App\Http\Controllers\WorkSettingController;
 use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\Employee\PasswordController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -23,6 +24,9 @@ Route::middleware('auth')->group(function () {
     
     Route::post('/attendance/checkin', [AttendanceController::class, 'checkIn'])->name('attendance.checkin');
     Route::post('/attendance/checkout', [AttendanceController::class, 'checkOut'])->name('attendance.checkout');
+    
+    Route::get('/employee/change-password', [PasswordController::class, 'edit'])->name('employee.change-password');
+    Route::post('/employee/change-password', [PasswordController::class, 'update'])->name('employee.change-password.update');
     
     Route::middleware('admin')->group(function () {
         Route::resource('users', UserController::class);

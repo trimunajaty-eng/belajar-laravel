@@ -20,9 +20,10 @@
         .dropdown-menu { position: absolute; top: 100%; right: 0; margin-top: 0.5rem; background: white; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); min-width: 200px; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s; }
         .dropdown-menu.show { opacity: 1; visibility: visible; transform: translateY(0); }
         .dropdown-menu form { margin: 0; }
-        .dropdown-item { width: 100%; padding: 0.75rem 1rem; border: none; background: none; text-align: left; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; color: #334155; font-size: 0.875rem; transition: background 0.2s; }
+        .dropdown-item { width: 100%; padding: 0.75rem 1rem; border: none; background: none; text-align: left; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; color: #334155; font-size: 0.875rem; transition: background 0.2s; text-decoration: none; }
         .dropdown-item:hover { background: #f8fafc; }
         .dropdown-item i { color: #ef4444; }
+        .dropdown-item:first-child i { color: #3b82f6; }
         
         .container { max-width: 1200px; margin: 0 auto; padding: 1.5rem; }
         .welcome-card { background: #ffffff; border: 1px solid #e2e8f0; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; }
@@ -131,6 +132,10 @@
             <span class="user-name">{{ Auth::user()->name }}</span>
             <i class="fas fa-chevron-down chevron" id="chevron"></i>
             <div class="dropdown-menu" id="dropdownMenu" onclick="event.stopPropagation()">
+                <a href="{{ route('employee.change-password') }}" class="dropdown-item">
+                    <i class="fas fa-cog" style="color: #3b82f6;"></i>
+                    <span>Settings</span>
+                </a>
                 <form method="POST" action="{{ route('logout') }}" onsubmit="showLogoutAnimation(event)">
                     @csrf
                     <button type="submit" class="dropdown-item">
