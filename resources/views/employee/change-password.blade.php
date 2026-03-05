@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Change Password</title>
+    <title>Ubah Kata Sandi</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -29,10 +29,14 @@
         .card { background: #ffffff; border: 1px solid #e2e8f0; padding: 2rem; border-radius: 12px; }
         .card h2 { color: #1e293b; font-size: 1.25rem; font-weight: 600; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem; }
         
-        .form-group { margin-bottom: 1.25rem; }
+        .form-group { margin-bottom: 1.25rem; position: relative; }
         .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: #475569; font-size: 0.875rem; }
         .form-control { width: 100%; padding: 0.625rem 0.875rem; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.875rem; transition: border 0.2s; }
         .form-control:focus { outline: none; border-color: #16a34a; }
+        .password-wrapper { position: relative; }
+        .password-wrapper .form-control { padding-right: 2.5rem; }
+        .toggle-password { position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); cursor: pointer; color: #64748b; transition: color 0.2s; }
+        .toggle-password:hover { color: #16a34a; }
         
         .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: all 0.2s; }
         .btn-primary { background: #16a34a; color: white; }
@@ -79,13 +83,13 @@
             <div class="dropdown-menu" id="dropdownMenu" onclick="event.stopPropagation()">
                 <a href="{{ route('employee.change-password') }}" class="dropdown-item">
                     <i class="fas fa-cog" style="color: #3b82f6;"></i>
-                    <span>Settings</span>
+                    <span>Pengaturan</span>
                 </a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit" class="dropdown-item">
                         <i class="fas fa-sign-out-alt"></i>
-                        <span>Logout</span>
+                        <span>Keluar</span>
                     </button>
                 </form>
             </div>
@@ -100,37 +104,46 @@
         @endif
 
         <div class="card">
-            <h2><i class="fas fa-key"></i> Change Password</h2>
+            <h2><i class="fas fa-key"></i> Ubah Kata Sandi</h2>
             
             <form method="POST" action="{{ route('employee.change-password.update') }}">
                 @csrf
                 
                 <div class="form-group">
-                    <label for="current_password">Current Password</label>
-                    <input type="password" id="current_password" name="current_password" class="form-control" required>
+                    <label for="current_password">Kata Sandi Saat Ini</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="current_password" name="current_password" class="form-control" required>
+                        <i class="fas fa-eye toggle-password" onclick="togglePassword('current_password', this)"></i>
+                    </div>
                     @error('current_password')
                         <div class="error">{{ $message }}</div>
                     @enderror
                 </div>
 
                 <div class="form-group">
-                    <label for="new_password">New Password</label>
-                    <input type="password" id="new_password" name="new_password" class="form-control" required>
+                    <label for="new_password">Kata Sandi Baru</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="new_password" name="new_password" class="form-control" required>
+                        <i class="fas fa-eye toggle-password" onclick="togglePassword('new_password', this)"></i>
+                    </div>
                     @error('new_password')
                         <div class="error">{{ $message }}</div>
                     @enderror
                 </div>
 
                 <div class="form-group">
-                    <label for="new_password_confirmation">Confirm New Password</label>
-                    <input type="password" id="new_password_confirmation" name="new_password_confirmation" class="form-control" required>
+                    <label for="new_password_confirmation">Konfirmasi Kata Sandi Baru</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="new_password_confirmation" name="new_password_confirmation" class="form-control" required>
+                        <i class="fas fa-eye toggle-password" onclick="togglePassword('new_password_confirmation', this)"></i>
+                    </div>
                 </div>
 
                 <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save"></i> Update Password
+                    <i class="fas fa-save"></i> Perbarui Kata Sandi
                 </button>
                 <a href="{{ route('dashboard') }}" class="btn btn-secondary">
-                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    <i class="fas fa-arrow-left"></i> Kembali ke Dashboard
                 </a>
             </form>
         </div>
@@ -153,6 +166,19 @@
                 chevron.classList.remove('rotate');
             }
         });
+
+        function togglePassword(inputId, icon) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
     </script>
 </body>
 </html>
