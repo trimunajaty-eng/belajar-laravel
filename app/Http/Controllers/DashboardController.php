@@ -80,8 +80,7 @@ class DashboardController extends Controller
             
         $recentAttendance = Attendance::where('user_id', $user->id)
             ->orderBy('date', 'desc')
-            ->take(10)
-            ->get();
+            ->paginate(5);
         
         return view('employee.dashboard', compact('todayAttendance', 'announcements', 'recentAttendance'));
     }

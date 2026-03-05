@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Employee Dashboard</title>
+    <title>Dashboard Karyawan</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -55,6 +55,12 @@
         .history-item { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid #f1f5f9; font-size: 0.875rem; gap: 1rem; }
         .history-item:last-child { border-bottom: none; }
         
+        .pagination { display: flex; justify-content: center; align-items: center; gap: 0.5rem; margin-top: 1rem; flex-wrap: wrap; }
+        .pagination a, .pagination span { padding: 0.5rem 0.75rem; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.875rem; text-decoration: none; color: #334155; transition: all 0.2s; }
+        .pagination a:hover { background: #f8fafc; border-color: #16a34a; color: #16a34a; }
+        .pagination .active { background: #16a34a; color: white; border-color: #16a34a; }
+        .pagination .disabled { opacity: 0.5; cursor: not-allowed; }
+        
         .toast { position: fixed; top: 2rem; right: 2rem; background: white; border: 1px solid #e2e8f0; padding: 1rem 1.5rem; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); display: none; z-index: 9999; animation: slideIn 0.3s ease; max-width: 90%; }
         .toast.show { display: flex; align-items: center; gap: 0.75rem; }
         .toast.success { border-left: 4px solid #16a34a; }
@@ -100,6 +106,9 @@
             
             .history-item { flex-direction: column; align-items: flex-start; padding: 0.5rem 0; font-size: 0.75rem; gap: 0.25rem; }
             
+            .pagination { gap: 0.25rem; }
+            .pagination a, .pagination span { padding: 0.375rem 0.5rem; font-size: 0.75rem; }
+            
             .toast { top: 1rem; right: 1rem; left: 1rem; padding: 0.75rem 1rem; font-size: 0.75rem; }
         }
         
@@ -121,7 +130,7 @@
     <div class="loading-screen" id="loadingScreen">
         <div style="text-align: center;">
             <div class="spinner"></div>
-            <p style="margin-top: 1.5rem; color: #1e293b; font-size: 0.875rem; font-weight: 500; letter-spacing: 0.5px;">Loading Portal...</p>
+            <p style="margin-top: 1.5rem; color: #1e293b; font-size: 0.875rem; font-weight: 500; letter-spacing: 0.5px;">Memuat Portal...</p>
         </div>
     </div>
 
@@ -134,13 +143,13 @@
             <div class="dropdown-menu" id="dropdownMenu" onclick="event.stopPropagation()">
                 <a href="{{ route('employee.change-password') }}" class="dropdown-item">
                     <i class="fas fa-cog" style="color: #3b82f6;"></i>
-                    <span>Settings</span>
+                    <span>Pengaturan</span>
                 </a>
                 <form method="POST" action="{{ route('logout') }}" onsubmit="showLogoutAnimation(event)">
                     @csrf
                     <button type="submit" class="dropdown-item">
                         <i class="fas fa-sign-out-alt"></i>
-                        <span>Logout</span>
+                        <span>Keluar</span>
                     </button>
                 </form>
             </div>
@@ -149,38 +158,38 @@
 
     <div class="container">
         <div class="welcome-card">
-            <h2>Welcome, {{ Auth::user()->name }}!</h2>
-            <p>Today is {{ now()->format('l, F d, Y') }}</p>
+            <h2>Selamat Datang, {{ Auth::user()->name }}!</h2>
+            <p>Hari ini {{ now()->locale('id')->isoFormat('dddd, D MMMM YYYY') }}</p>
         </div>
 
         <div class="grid">
             <div class="card">
-                <h3><i class="fas fa-clock"></i> Attendance Today</h3>
+                <h3><i class="fas fa-clock"></i> Kehadiran Hari Ini</h3>
                 <div class="attendance-status">
                     @if($todayAttendance)
                         @if($todayAttendance->check_out)
                             <div class="status-icon" style="color: #16a34a;"><i class="fas fa-check-circle"></i></div>
-                            <div class="status-text" style="color: #16a34a;">Work Complete</div>
-                            <div class="status-time">Check In: {{ $todayAttendance->check_in }}</div>
-                            <div class="status-time">Check Out: {{ $todayAttendance->check_out }}</div>
+                            <div class="status-text" style="color: #16a34a;">Pekerjaan Selesai</div>
+                            <div class="status-time">Masuk: {{ $todayAttendance->check_in }}</div>
+                            <div class="status-time">Keluar: {{ $todayAttendance->check_out }}</div>
                         @else
                             <div class="status-icon" style="color: #3b82f6;"><i class="fas fa-play-circle"></i></div>
-                            <div class="status-text" style="color: #3b82f6;">Working</div>
-                            <div class="status-time">Check In: {{ $todayAttendance->check_in }}</div>
+                            <div class="status-text" style="color: #3b82f6;">Sedang Bekerja</div>
+                            <div class="status-time">Masuk: {{ $todayAttendance->check_in }}</div>
                             <form method="POST" action="{{ route('attendance.checkout') }}" style="margin-top: 1rem;">
                                 @csrf
                                 <button type="submit" class="btn btn-danger">
-                                    <i class="fas fa-sign-out-alt"></i> Check Out
+                                    <i class="fas fa-sign-out-alt"></i> Keluar
                                 </button>
                             </form>
                         @endif
                     @else
                         <div class="status-icon" style="color: #64748b;"><i class="fas fa-clock"></i></div>
-                        <div class="status-text" style="color: #64748b;">Not Checked In</div>
+                        <div class="status-text" style="color: #64748b;">Belum Absen</div>
                         <form method="POST" action="{{ route('attendance.checkin') }}" style="margin-top: 1rem;">
                             @csrf
                             <button type="submit" class="btn btn-success">
-                                <i class="fas fa-sign-in-alt"></i> Check In
+                                <i class="fas fa-sign-in-alt"></i> Masuk
                             </button>
                         </form>
                     @endif
@@ -188,7 +197,7 @@
             </div>
 
             <div class="card">
-                <h3><i class="fas fa-bullhorn"></i> Announcements</h3>
+                <h3><i class="fas fa-bullhorn"></i> Pengumuman</h3>
                 @forelse($announcements as $announcement)
                     <div class="announcement {{ $announcement->type }}">
                         <div class="announcement-title">{{ $announcement->title }}</div>
@@ -200,13 +209,13 @@
                         @endif
                     </div>
                 @empty
-                    <p style="color: #64748b;">No announcements at this time.</p>
+                    <p style="color: #64748b;">Tidak ada pengumuman saat ini.</p>
                 @endforelse
             </div>
         </div>
 
         <div class="card">
-            <h3><i class="fas fa-history"></i> Recent Attendance</h3>
+            <h3><i class="fas fa-history"></i> Riwayat Kehadiran</h3>
             <div class="attendance-history">
                 @forelse($recentAttendance as $attendance)
                     <div class="history-item">
@@ -224,9 +233,41 @@
                         </div>
                     </div>
                 @empty
-                    <p style="color: #64748b;">No attendance records found.</p>
+                    <p style="color: #64748b;">Tidak ada catatan kehadiran.</p>
                 @endforelse
             </div>
+            
+            @if($recentAttendance->hasPages())
+                <div class="pagination">
+                    @if ($recentAttendance->onFirstPage())
+                        <span class="disabled"><i class="fas fa-chevron-left"></i> Sebelumnya</span>
+                    @else
+                        <a href="{{ $recentAttendance->previousPageUrl() }}"><i class="fas fa-chevron-left"></i> Sebelumnya</a>
+                    @endif
+
+                    @php
+                        $currentPage = $recentAttendance->currentPage();
+                        $lastPage = $recentAttendance->lastPage();
+                        $start = max(1, $currentPage - 2);
+                        $end = min($lastPage, $start + 4);
+                        $start = max(1, $end - 4);
+                    @endphp
+
+                    @for ($page = $start; $page <= $end; $page++)
+                        @if ($page == $currentPage)
+                            <span class="active">{{ $page }}</span>
+                        @else
+                            <a href="{{ $recentAttendance->url($page) }}">{{ $page }}</a>
+                        @endif
+                    @endfor
+
+                    @if ($recentAttendance->hasMorePages())
+                        <a href="{{ $recentAttendance->nextPageUrl() }}">Selanjutnya <i class="fas fa-chevron-right"></i></a>
+                    @else
+                        <span class="disabled">Selanjutnya <i class="fas fa-chevron-right"></i></span>
+                    @endif
+                </div>
+            @endif
         </div>
     </div>
 
@@ -238,7 +279,7 @@
     <div class="loading-screen" id="logoutScreen" style="display: none;">
         <div style="text-align: center;">
             <div class="spinner"></div>
-            <p style="margin-top: 1.5rem; color: #1e293b; font-size: 0.875rem; font-weight: 500; letter-spacing: 0.5px;">Logging out...</p>
+            <p style="margin-top: 1.5rem; color: #1e293b; font-size: 0.875rem; font-weight: 500; letter-spacing: 0.5px;">Keluar...</p>
         </div>
     </div>
 
