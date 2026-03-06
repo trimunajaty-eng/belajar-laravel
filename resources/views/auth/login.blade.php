@@ -4,65 +4,152 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; background: #f5f5f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .login-container { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
-        .login-header { text-align: center; margin-bottom: 2rem; }
-        .form-group { margin-bottom: 1rem; }
-        label { display: block; margin-bottom: 0.5rem; font-weight: bold; }
-        input[type="email"], input[type="password"], input[type="text"] { width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem; }
-        input[type="email"]:focus, input[type="password"]:focus, input[type="text"]:focus { outline: none; border-color: #007bff; }
-        .password-wrapper { position: relative; }
-        .password-wrapper input { width: 100%; padding-right: 2.5rem; }
-        .toggle-password { position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); cursor: pointer; color: #6c757d; transition: color 0.2s; }
-        .toggle-password:hover { color: #007bff; }
-        .btn { width: 100%; padding: 0.75rem; background: #007bff; color: white; border: none; border-radius: 4px; font-size: 1rem; cursor: pointer; }
-        .btn:hover { background: #0056b3; }
-        .error { color: #dc3545; font-size: 0.875rem; margin-top: 0.25rem; }
-        .alert { padding: 1rem; border-radius: 4px; margin-bottom: 1rem; background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
-    </style>
 </head>
-<body>
-    <div class="login-container">
-        <div class="login-header">
-            <h2>Login</h2>
-        </div>
-        
-        @if($errors->has('email') && str_contains($errors->first('email'), 'deactivated'))
-            <div class="alert">
-                <strong>akun anda telah dinonaktifkan</strong><br>
-                {{ $errors->first('email') }}
-            </div>
-        @endif
-        
-        <form method="POST" action="{{ route('login') }}">
-            @csrf
-            
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" value="{{ old('email') }}" required>
-                @error('email')
-                    @if(!str_contains($message, 'deactivated'))
-                        <div class="error">{{ $message }}</div>
-                    @endif
-                @enderror
-            </div>
-            
-            <div class="form-group">
-                <label for="password">Password</label>
-                <div class="password-wrapper">
-                    <input type="password" id="password" name="password" required>
-                    <i class="fas fa-eye toggle-password" onclick="togglePassword()"></i>
+<body class="min-h-screen bg-slate-50">
+    <div class="min-h-screen grid lg:grid-cols-2">
+        <!-- Left Side -->
+        <div class="hidden lg:flex flex-col justify-between bg-slate-900 px-12 py-10 text-white">
+            <div>
+                <div class="flex items-center gap-3">
+                    <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-500 text-lg font-bold shadow-lg shadow-blue-500/30">
+                        A
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-semibold tracking-wide">Attendance App</h1>
+                        <p class="text-sm text-slate-300">Employee Management System</p>
+                    </div>
                 </div>
-                @error('password')
-                    <div class="error">{{ $message }}</div>
-                @enderror
             </div>
-            
-            <button type="submit" class="btn">Login</button>
-        </form>
+
+            <div class="max-w-md">
+                <p class="mb-4 inline-flex items-center rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-slate-200">
+                    Modern SaaS Login
+                </p>
+                <h2 class="text-4xl font-bold leading-tight">
+                    Welcome back to your admin workspace.
+                </h2>
+                <p class="mt-5 text-base leading-7 text-slate-300">
+                    Manage employees, attendance, schedules, and reports in one clean dashboard built for daily operations.
+                </p>
+
+                <div class="mt-10 grid grid-cols-3 gap-4">
+                    <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+                        <div class="text-2xl font-bold">24/7</div>
+                        <div class="mt-1 text-xs text-slate-300">Access Anywhere</div>
+                    </div>
+                    <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+                        <div class="text-2xl font-bold">Fast</div>
+                        <div class="mt-1 text-xs text-slate-300">Daily Workflow</div>
+                    </div>
+                    <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+                        <div class="text-2xl font-bold">Secure</div>
+                        <div class="mt-1 text-xs text-slate-300">Session Based</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-sm text-slate-400">
+                © {{ date('Y') }} Attendance App. All rights reserved.
+            </div>
+        </div>
+
+        <!-- Right Side -->
+        <div class="flex items-center justify-center px-5 py-10 sm:px-8 lg:px-12">
+            <div class="w-full max-w-md">
+                <!-- Mobile Branding -->
+                <div class="mb-8 flex items-center gap-3 lg:hidden">
+                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-base font-bold text-white">
+                        A
+                    </div>
+                    <div>
+                        <h1 class="text-base font-semibold text-slate-900">Attendance App</h1>
+                        <p class="text-xs text-slate-500">Employee Management System</p>
+                    </div>
+                </div>
+
+                <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-xl shadow-slate-200/60 sm:p-8">
+                    <div class="mb-8">
+                        <h2 class="text-2xl font-bold text-slate-900">Sign in</h2>
+                        <p class="mt-2 text-sm text-slate-500">
+                            Please enter your account details to continue.
+                        </p>
+                    </div>
+                    
+                    @if($errors->has('email') && str_contains($errors->first('email'), 'deactivated'))
+                        <div class="mb-5 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                            <strong class="block font-semibold">Akun anda telah dinonaktifkan</strong>
+                            <span>{{ $errors->first('email') }}</span>
+                        </div>
+                    @endif
+                    
+                    <form method="POST" action="{{ route('login') }}" class="space-y-5">
+                        @csrf
+                        
+                        <div>
+                            <label for="email" class="mb-2 block text-sm font-medium text-slate-700">
+                                Email
+                            </label>
+                            <div class="relative">
+                                <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
+                                    <i class="fas fa-envelope"></i>
+                                </span>
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    value="{{ old('email') }}"
+                                    required
+                                    class="w-full rounded-2xl border border-slate-200 bg-white py-3 pl-11 pr-4 text-sm text-slate-800 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+                                    placeholder="Enter your email"
+                                >
+                            </div>
+                            @error('email')
+                                @if(!str_contains($message, 'deactivated'))
+                                    <div class="mt-2 text-sm text-red-600">{{ $message }}</div>
+                                @endif
+                            @enderror
+                        </div>
+                        
+                        <div>
+                            <label for="password" class="mb-2 block text-sm font-medium text-slate-700">
+                                Password
+                            </label>
+                            <div class="relative">
+                                <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
+                                    <i class="fas fa-lock"></i>
+                                </span>
+                                <input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    required
+                                    class="w-full rounded-2xl border border-slate-200 bg-white py-3 pl-11 pr-11 text-sm text-slate-800 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+                                    placeholder="Enter your password"
+                                >
+                                <i class="fas fa-eye toggle-password absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-slate-400 transition hover:text-blue-500" onclick="togglePassword()"></i>
+                            </div>
+                            @error('password')
+                                <div class="mt-2 text-sm text-red-600">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        
+                        <button
+                            type="submit"
+                            class="flex w-full items-center justify-center gap-2 rounded-2xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-100"
+                        >
+                            <i class="fas fa-right-to-bracket"></i>
+                            <span>Login</span>
+                        </button>
+                    </form>
+
+                    <div class="mt-6 border-t border-slate-100 pt-5 text-center text-xs text-slate-400">
+                        Secure login for authorized users only.
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     
     <script>
