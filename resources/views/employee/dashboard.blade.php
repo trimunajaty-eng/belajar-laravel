@@ -5,190 +5,97 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Karyawan</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #334155; }
-        
-        .navbar { background: #ffffff; border-bottom: 1px solid #e2e8f0; padding: 1rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
-        .navbar h1 { font-size: 1.25rem; font-weight: 600; color: #1e293b; display: flex; align-items: center; }
-        .user-info { position: relative; display: flex; align-items: center; gap: 0.5rem; cursor: pointer; padding: 0.5rem; border-radius: 8px; transition: background 0.2s; }
-        .user-info:hover { background: #f8fafc; }
-        .user-avatar { width: 36px; height: 36px; border-radius: 8px; background: #16a34a; display: flex; align-items: center; justify-content: center; color: white; font-weight: 500; font-size: 0.875rem; }
-        .user-name { font-weight: 500; }
-        .chevron { transition: transform 0.3s; font-size: 0.75rem; color: #64748b; }
-        .chevron.rotate { transform: rotate(180deg); }
-        .dropdown-menu { position: absolute; top: 100%; right: 0; margin-top: 0.5rem; background: white; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); min-width: 200px; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s; }
-        .dropdown-menu.show { opacity: 1; visibility: visible; transform: translateY(0); }
-        .dropdown-menu form { margin: 0; }
-        .dropdown-item { width: 100%; padding: 0.75rem 1rem; border: none; background: none; text-align: left; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; color: #334155; font-size: 0.875rem; transition: background 0.2s; text-decoration: none; }
-        .dropdown-item:hover { background: #f8fafc; }
-        .dropdown-item i { color: #ef4444; }
-        .dropdown-item:first-child i { color: #3b82f6; }
-        
-        .container { max-width: 1200px; margin: 0 auto; padding: 1.5rem; }
-        .welcome-card { background: #ffffff; border: 1px solid #e2e8f0; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; }
-        .welcome-card h2 { color: #1e293b; font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem; word-break: break-word; }
-        .welcome-card p { font-size: 0.875rem; }
-        
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
-        .card { background: #ffffff; border: 1px solid #e2e8f0; padding: 1.5rem; border-radius: 12px; }
-        .card h3 { color: #1e293b; margin-bottom: 1rem; font-size: 1.125rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; }
-        
-        .attendance-status { text-align: center; padding: 1.5rem; }
-        .status-icon { font-size: 2.5rem; margin-bottom: 1rem; }
-        .status-text { font-size: 1.125rem; font-weight: 600; margin-bottom: 0.5rem; }
-        .status-time { color: #64748b; font-size: 0.875rem; margin-bottom: 0.25rem; }
-        
-        .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: all 0.2s; width: 100%; max-width: 200px; }
-        .btn-success { background: #16a34a; color: white; }
-        .btn-danger { background: #ef4444; color: white; }
-        .btn:hover { transform: translateY(-1px); }
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-        
-        .announcement { background: #fef3c7; border: 1px solid #fbbf24; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; word-break: break-word; }
-        .announcement.meeting { background: #dbeafe; border-color: #3b82f6; }
-        .announcement.urgent { background: #fecaca; border-color: #ef4444; }
-        .announcement-title { font-weight: 600; margin-bottom: 0.5rem; font-size: 0.875rem; }
-        .announcement-date { font-size: 0.75rem; color: #64748b; margin-top: 0.5rem; }
-        
-        .attendance-history { max-height: 300px; overflow-y: auto; }
-        .history-item { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid #f1f5f9; font-size: 0.875rem; gap: 1rem; }
-        .history-item:last-child { border-bottom: none; }
-        
-        .pagination { display: flex; justify-content: center; align-items: center; gap: 0.5rem; margin-top: 1rem; flex-wrap: wrap; }
-        .pagination a, .pagination span { padding: 0.5rem 0.75rem; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.875rem; text-decoration: none; color: #334155; transition: all 0.2s; }
-        .pagination a:hover { background: #f8fafc; border-color: #16a34a; color: #16a34a; }
-        .pagination .active { background: #16a34a; color: white; border-color: #16a34a; }
-        .pagination .disabled { opacity: 0.5; cursor: not-allowed; }
-        
-        .toast { position: fixed; top: 2rem; right: 2rem; background: white; border: 1px solid #e2e8f0; padding: 1rem 1.5rem; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); display: none; z-index: 9999; animation: slideIn 0.3s ease; max-width: 90%; }
-        .toast.show { display: flex; align-items: center; gap: 0.75rem; }
-        .toast.success { border-left: 4px solid #16a34a; }
-        .toast.error { border-left: 4px solid #ef4444; }
-        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        
-        .loading-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #ffffff; display: flex; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.8s ease-in-out; }
-        .loading-screen.hide { opacity: 0; pointer-events: none; }
-        .spinner { width: 60px; height: 60px; border: 5px solid #f1f5f9; border-top-color: #1e293b; border-radius: 50%; animation: spin 3s ease-in-out infinite; box-shadow: 0 0 20px rgba(30, 41, 59, 0.1); }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
-        /* Responsive Styles */
-        @media (max-width: 768px) {
-            .navbar { padding: 0.75rem; }
-            .navbar h1 { font-size: 1rem; }
-            .navbar h1 i { font-size: 1rem; margin-right: 0.25rem; }
-            .user-name { display: none; }
-            .user-avatar { width: 32px; height: 32px; font-size: 0.75rem; }
-            .user-info { gap: 0.25rem; padding: 0.25rem; }
-            .dropdown-menu { min-width: 150px; }
-            
-            .container { padding: 1rem; }
-            
-            .welcome-card { padding: 1rem; margin-bottom: 1rem; }
-            .welcome-card h2 { font-size: 1rem; }
-            .welcome-card p { font-size: 0.75rem; }
-            
-            .grid { grid-template-columns: 1fr; gap: 1rem; margin-bottom: 1rem; }
-            
-            .card { padding: 1rem; }
-            .card h3 { font-size: 1rem; margin-bottom: 0.75rem; }
-            
-            .attendance-status { padding: 1rem; }
-            .status-icon { font-size: 2rem; margin-bottom: 0.75rem; }
-            .status-text { font-size: 1rem; }
-            .status-time { font-size: 0.75rem; }
-            
-            .btn { padding: 0.625rem 1rem; font-size: 0.75rem; max-width: 150px; }
-            
-            .announcement { padding: 0.75rem; margin-bottom: 0.75rem; }
-            .announcement-title { font-size: 0.75rem; }
-            .announcement-date { font-size: 0.7rem; }
-            
-            .history-item { flex-direction: column; align-items: flex-start; padding: 0.5rem 0; font-size: 0.75rem; gap: 0.25rem; }
-            
-            .pagination { gap: 0.25rem; }
-            .pagination a, .pagination span { padding: 0.375rem 0.5rem; font-size: 0.75rem; }
-            
-            .toast { top: 1rem; right: 1rem; left: 1rem; padding: 0.75rem 1rem; font-size: 0.75rem; }
-        }
-        
-        @media (max-width: 480px) {
-            .navbar h1 { font-size: 0.875rem; }
-            .navbar h1 i { display: none; }
-            
-            .welcome-card h2 { font-size: 0.875rem; }
-            .welcome-card p { font-size: 0.7rem; }
-            
-            .status-icon { font-size: 1.75rem; }
-            .status-text { font-size: 0.875rem; }
-            
-            .btn { padding: 0.5rem 0.75rem; font-size: 0.7rem; }
-        }
-    </style>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body>
-    <div class="loading-screen" id="loadingScreen">
-        <div style="text-align: center;">
-            <div class="spinner"></div>
-            <p style="margin-top: 1.5rem; color: #1e293b; font-size: 0.875rem; font-weight: 500; letter-spacing: 0.5px;">Memuat Portal...</p>
+<body class="min-h-screen bg-slate-50 text-slate-700">
+    <div id="loadingScreen" class="fixed inset-0 z-[9999] flex items-center justify-center bg-white transition-opacity duration-700">
+        <div class="text-center">
+            <div class="mx-auto h-16 w-16 animate-spin rounded-full border-[5px] border-slate-100 border-t-slate-800 shadow-lg"></div>
+            <p class="mt-6 text-sm font-medium tracking-wide text-slate-800">Memuat Portal...</p>
         </div>
     </div>
 
-    <nav class="navbar">
-        <h1><i class="fas fa-user-clock" style="color: #16a34a; margin-right: 0.5rem;"></i>Employee Portal</h1>
-        <div class="user-info" onclick="toggleDropdown()">
-            <div class="user-avatar">{{ substr(Auth::user()->name, 0, 1) }}</div>
-            <span class="user-name">{{ Auth::user()->name }}</span>
-            <i class="fas fa-chevron-down chevron" id="chevron"></i>
-            <div class="dropdown-menu" id="dropdownMenu" onclick="event.stopPropagation()">
-                <a href="{{ route('employee.change-password') }}" class="dropdown-item">
-                    <i class="fas fa-cog" style="color: #3b82f6;"></i>
-                    <span>Pengaturan</span>
-                </a>
-                <form method="POST" action="{{ route('logout') }}" onsubmit="showLogoutAnimation(event)">
-                    @csrf
-                    <button type="submit" class="dropdown-item">
-                        <i class="fas fa-sign-out-alt"></i>
-                        <span>Keluar</span>
-                    </button>
-                </form>
+    <nav class="sticky top-0 z-50 border-b border-slate-200/80 bg-white/90 backdrop-blur">
+        <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+            <h1 class="flex items-center text-lg font-semibold tracking-tight text-slate-900 sm:text-xl">
+                <span class="mr-3 flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-sm">
+                    <i class="fas fa-user-clock"></i>
+                </span>
+                Employee Portal
+            </h1>
+
+            <div class="relative flex items-center">
+                <div onclick="toggleDropdown()" class="flex cursor-pointer items-center gap-2 rounded-xl border border-transparent px-2 py-2 transition hover:border-slate-200 hover:bg-slate-50 sm:gap-3">
+                    <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-600 text-sm font-medium text-white">
+                        {{ substr(Auth::user()->name, 0, 1) }}
+                    </div>
+                    <span class="hidden text-sm font-medium text-slate-700 sm:inline">{{ Auth::user()->name }}</span>
+                    <i class="fas fa-chevron-down text-xs text-slate-400 transition-transform duration-300" id="chevron"></i>
+                </div>
+
+                <div id="dropdownMenu" class="invisible absolute right-0 top-full z-50 mt-3 w-52 translate-y-2 rounded-2xl border border-slate-200 bg-white p-2 opacity-0 shadow-xl transition-all duration-300">
+                    <a href="{{ route('employee.change-password') }}" class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-700 transition hover:bg-slate-50">
+                        <i class="fas fa-cog text-blue-500"></i>
+                        <span>Pengaturan</span>
+                    </a>
+
+                    <form method="POST" action="{{ route('logout') }}" onsubmit="showLogoutAnimation(event)">
+                        @csrf
+                        <button type="submit" class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm text-slate-700 transition hover:bg-slate-50">
+                            <i class="fas fa-sign-out-alt text-red-500"></i>
+                            <span>Keluar</span>
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </nav>
 
-    <div class="container">
-        <div class="welcome-card">
-            <h2>Selamat Datang, {{ Auth::user()->name }}!</h2>
-            <p>Hari ini {{ now()->locale('id')->isoFormat('dddd, D MMMM YYYY') }}</p>
+    <main class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+        <div class="mb-6 overflow-hidden rounded-3xl bg-gradient-to-r from-slate-900 via-slate-800 to-emerald-700 p-6 text-white shadow-xl sm:p-8">
+            <h2 class="text-xl font-bold tracking-tight sm:text-2xl">Selamat Datang, {{ Auth::user()->name }}!</h2>
+            <p class="mt-2 text-sm text-slate-200">Hari ini {{ now()->locale('id')->isoFormat('dddd, D MMMM YYYY') }}</p>
         </div>
 
-        <div class="grid">
-            <div class="card">
-                <h3><i class="fas fa-clock"></i> Kehadiran Hari Ini</h3>
-                <div class="attendance-status">
+        <div class="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+                <h3 class="mb-5 flex items-center gap-3 text-lg font-semibold text-slate-900">
+                    <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+                        <i class="fas fa-clock"></i>
+                    </span>
+                    Kehadiran Hari Ini
+                </h3>
+
+                <div class="py-4 text-center">
                     @if($todayAttendance)
                         @if($todayAttendance->check_out)
-                            <div class="status-icon" style="color: #16a34a;"><i class="fas fa-check-circle"></i></div>
-                            <div class="status-text" style="color: #16a34a;">Pekerjaan Selesai</div>
-                            <div class="status-time">Masuk: {{ $todayAttendance->check_in }}</div>
-                            <div class="status-time">Keluar: {{ $todayAttendance->check_out }}</div>
+                            <div class="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-3xl bg-emerald-50 text-4xl text-emerald-600">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="mb-2 text-lg font-semibold text-emerald-600">Pekerjaan Selesai</div>
+                            <div class="text-sm text-slate-500">Masuk: {{ $todayAttendance->check_in }}</div>
+                            <div class="mt-1 text-sm text-slate-500">Keluar: {{ $todayAttendance->check_out }}</div>
                         @else
-                            <div class="status-icon" style="color: #3b82f6;"><i class="fas fa-play-circle"></i></div>
-                            <div class="status-text" style="color: #3b82f6;">Sedang Bekerja</div>
-                            <div class="status-time">Masuk: {{ $todayAttendance->check_in }}</div>
-                            <form method="POST" action="{{ route('attendance.checkout') }}" style="margin-top: 1rem;">
+                            <div class="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-3xl bg-blue-50 text-4xl text-blue-500">
+                                <i class="fas fa-play-circle"></i>
+                            </div>
+                            <div class="mb-2 text-lg font-semibold text-blue-500">Sedang Bekerja</div>
+                            <div class="text-sm text-slate-500">Masuk: {{ $todayAttendance->check_in }}</div>
+                            <form method="POST" action="{{ route('attendance.checkout') }}" class="mt-5">
                                 @csrf
-                                <button type="submit" class="btn btn-danger">
+                                <button type="submit" class="inline-flex w-full max-w-[200px] items-center justify-center gap-2 rounded-2xl bg-red-500 px-5 py-3 text-sm font-medium text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-red-600">
                                     <i class="fas fa-sign-out-alt"></i> Keluar
                                 </button>
                             </form>
                         @endif
                     @else
-                        <div class="status-icon" style="color: #64748b;"><i class="fas fa-clock"></i></div>
-                        <div class="status-text" style="color: #64748b;">Belum Absen</div>
-                        <form method="POST" action="{{ route('attendance.checkin') }}" style="margin-top: 1rem;">
+                        <div class="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-3xl bg-slate-100 text-4xl text-slate-400">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="mb-2 text-lg font-semibold text-slate-500">Belum Absen</div>
+                        <form method="POST" action="{{ route('attendance.checkin') }}" class="mt-5">
                             @csrf
-                            <button type="submit" class="btn btn-success">
+                            <button type="submit" class="inline-flex w-full max-w-[200px] items-center justify-center gap-2 rounded-2xl bg-emerald-600 px-5 py-3 text-sm font-medium text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-emerald-700">
                                 <i class="fas fa-sign-in-alt"></i> Masuk
                             </button>
                         </form>
@@ -196,34 +103,47 @@
                 </div>
             </div>
 
-            <div class="card">
-                <h3><i class="fas fa-bullhorn"></i> Pengumuman</h3>
+            <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+                <h3 class="mb-5 flex items-center gap-3 text-lg font-semibold text-slate-900">
+                    <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 text-amber-500">
+                        <i class="fas fa-bullhorn"></i>
+                    </span>
+                    Pengumuman
+                </h3>
+
                 @forelse($announcements as $announcement)
-                    <div class="announcement {{ $announcement->type }}">
-                        <div class="announcement-title">{{ $announcement->title }}</div>
+                    <div class="mb-4 rounded-2xl border px-4 py-4 text-sm text-slate-700
+                        {{ $announcement->type === 'meeting' ? 'border-blue-200 bg-blue-50' : ($announcement->type === 'urgent' ? 'border-red-200 bg-red-50' : 'border-amber-200 bg-amber-50') }}">
+                        <div class="mb-2 font-semibold text-slate-900">{{ $announcement->title }}</div>
                         <div>{{ $announcement->content }}</div>
                         @if($announcement->meeting_date)
-                            <div class="announcement-date">
-                                <i class="fas fa-calendar"></i> {{ $announcement->meeting_date->format('M d, Y H:i') }}
+                            <div class="mt-3 text-xs text-slate-500">
+                                <i class="fas fa-calendar mr-1"></i> {{ $announcement->meeting_date->format('M d, Y H:i') }}
                             </div>
                         @endif
                     </div>
                 @empty
-                    <p style="color: #64748b;">Tidak ada pengumuman saat ini.</p>
+                    <p class="text-sm text-slate-500">Tidak ada pengumuman saat ini.</p>
                 @endforelse
             </div>
         </div>
 
-        <div class="card">
-            <h3><i class="fas fa-history"></i> Riwayat Kehadiran</h3>
-            <div class="attendance-history">
+        <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+            <h3 class="mb-5 flex items-center gap-3 text-lg font-semibold text-slate-900">
+                <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-slate-600">
+                    <i class="fas fa-history"></i>
+                </span>
+                Riwayat Kehadiran
+            </h3>
+
+            <div class="max-h-[300px] overflow-y-auto pr-1">
                 @forelse($recentAttendance as $attendance)
-                    <div class="history-item">
+                    <div class="flex flex-col gap-1 border-b border-slate-100 py-4 text-sm last:border-b-0 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
                         <div>
                             <strong>{{ $attendance->date->format('M d, Y') }}</strong>
-                            <span style="color: #64748b;">- {{ ucfirst($attendance->status) }}</span>
+                            <span class="text-slate-500">- {{ ucfirst($attendance->status) }}</span>
                         </div>
-                        <div>
+                        <div class="text-slate-600">
                             @if($attendance->check_in)
                                 In: {{ $attendance->check_in }}
                             @endif
@@ -233,16 +153,20 @@
                         </div>
                     </div>
                 @empty
-                    <p style="color: #64748b;">Tidak ada catatan kehadiran.</p>
+                    <p class="text-sm text-slate-500">Tidak ada catatan kehadiran.</p>
                 @endforelse
             </div>
             
             @if($recentAttendance->hasPages())
-                <div class="pagination">
+                <div class="mt-5 flex flex-wrap items-center justify-center gap-2">
                     @if ($recentAttendance->onFirstPage())
-                        <span class="disabled"><i class="fas fa-chevron-left"></i> Sebelumnya</span>
+                        <span class="cursor-not-allowed rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-400">
+                            <i class="fas fa-chevron-left"></i> Sebelumnya
+                        </span>
                     @else
-                        <a href="{{ $recentAttendance->previousPageUrl() }}"><i class="fas fa-chevron-left"></i> Sebelumnya</a>
+                        <a href="{{ $recentAttendance->previousPageUrl() }}" class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 transition hover:border-emerald-500 hover:text-emerald-600">
+                            <i class="fas fa-chevron-left"></i> Sebelumnya
+                        </a>
                     @endif
 
                     @php
@@ -255,40 +179,45 @@
 
                     @for ($page = $start; $page <= $end; $page++)
                         @if ($page == $currentPage)
-                            <span class="active">{{ $page }}</span>
+                            <span class="rounded-xl border border-emerald-600 bg-emerald-600 px-3 py-2 text-sm font-medium text-white">{{ $page }}</span>
                         @else
-                            <a href="{{ $recentAttendance->url($page) }}">{{ $page }}</a>
+                            <a href="{{ $recentAttendance->url($page) }}" class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 transition hover:border-emerald-500 hover:text-emerald-600">{{ $page }}</a>
                         @endif
                     @endfor
 
                     @if ($recentAttendance->hasMorePages())
-                        <a href="{{ $recentAttendance->nextPageUrl() }}">Selanjutnya <i class="fas fa-chevron-right"></i></a>
+                        <a href="{{ $recentAttendance->nextPageUrl() }}" class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 transition hover:border-emerald-500 hover:text-emerald-600">
+                            Selanjutnya <i class="fas fa-chevron-right"></i>
+                        </a>
                     @else
-                        <span class="disabled">Selanjutnya <i class="fas fa-chevron-right"></i></span>
+                        <span class="cursor-not-allowed rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-400">
+                            Selanjutnya <i class="fas fa-chevron-right"></i>
+                        </span>
                     @endif
                 </div>
             @endif
         </div>
+    </main>
+
+    <div id="toast" class="fixed right-4 top-4 z-[9999] hidden max-w-[90%] items-center gap-3 rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-xl sm:right-8 sm:top-8">
+        <i class="fas fa-check-circle text-xl text-emerald-600"></i>
+        <span id="toast-message" class="text-sm text-slate-700"></span>
     </div>
 
-    <div id="toast" class="toast">
-        <i class="fas fa-check-circle" style="color: #16a34a; font-size: 1.25rem;"></i>
-        <span id="toast-message"></span>
-    </div>
-
-    <div class="loading-screen" id="logoutScreen" style="display: none;">
-        <div style="text-align: center;">
-            <div class="spinner"></div>
-            <p style="margin-top: 1.5rem; color: #1e293b; font-size: 0.875rem; font-weight: 500; letter-spacing: 0.5px;">Keluar...</p>
+    <div id="logoutScreen" class="fixed inset-0 z-[9999] hidden items-center justify-center bg-white">
+        <div class="text-center">
+            <div class="mx-auto h-16 w-16 animate-spin rounded-full border-[5px] border-slate-100 border-t-slate-800 shadow-lg"></div>
+            <p class="mt-6 text-sm font-medium tracking-wide text-slate-800">Keluar...</p>
         </div>
     </div>
 
     <script>
         window.addEventListener('load', function() {
             setTimeout(() => {
-                document.getElementById('loadingScreen').classList.add('hide');
+                const loadingScreen = document.getElementById('loadingScreen');
+                loadingScreen.classList.add('opacity-0', 'pointer-events-none');
                 setTimeout(() => {
-                    document.getElementById('loadingScreen').style.display = 'none';
+                    loadingScreen.style.display = 'none';
                 }, 800);
             }, 300);
         });
@@ -296,7 +225,8 @@
         function showLogoutAnimation(event) {
             event.preventDefault();
             const logoutScreen = document.getElementById('logoutScreen');
-            logoutScreen.style.display = 'flex';
+            logoutScreen.classList.remove('hidden');
+            logoutScreen.classList.add('flex');
             setTimeout(() => {
                 event.target.submit();
             }, 800);
@@ -305,17 +235,22 @@
         function toggleDropdown() {
             const dropdown = document.getElementById('dropdownMenu');
             const chevron = document.getElementById('chevron');
-            dropdown.classList.toggle('show');
-            chevron.classList.toggle('rotate');
+
+            dropdown.classList.toggle('invisible');
+            dropdown.classList.toggle('opacity-0');
+            dropdown.classList.toggle('translate-y-2');
+
+            chevron.classList.toggle('rotate-180');
         }
 
         document.addEventListener('click', function(event) {
-            const userInfo = document.querySelector('.user-info');
+            const userInfo = document.querySelector('.relative.flex.items-center');
             const dropdown = document.getElementById('dropdownMenu');
             const chevron = document.getElementById('chevron');
+
             if (!userInfo.contains(event.target)) {
-                dropdown.classList.remove('show');
-                chevron.classList.remove('rotate');
+                dropdown.classList.add('invisible', 'opacity-0', 'translate-y-2');
+                chevron.classList.remove('rotate-180');
             }
         });
     </script>
@@ -325,9 +260,11 @@
         const toast = document.getElementById('toast');
         const message = document.getElementById('toast-message');
         message.textContent = '{{ session('success') }}';
-        toast.classList.add('show', 'success');
+        toast.classList.remove('hidden');
+        toast.classList.add('flex');
         setTimeout(() => {
-            toast.classList.remove('show');
+            toast.classList.remove('flex');
+            toast.classList.add('hidden');
         }, 3000);
     </script>
     @endif
