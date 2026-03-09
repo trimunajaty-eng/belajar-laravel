@@ -52,7 +52,7 @@
     </nav>
 
     <main class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        <div class="mb-6 overflow-hidden rounded-3xl bg-gradient-to-r from-slate-900 via-slate-800 to-emerald-700 p-6 text-white shadow-xl sm:p-8">
+        <div class="mb-6 overflow-hidden rounded-3xl bg-gradient-to-r from-blue-900 via-blue-700 to-indigo-600 p-6 text-white shadow-xl sm:p-8">
             <h2 class="text-xl font-bold tracking-tight sm:text-2xl">Selamat Datang, {{ Auth::user()->name }}!</h2>
             <p class="mt-2 text-sm text-slate-200">Hari ini {{ now()->locale('id')->isoFormat('dddd, D MMMM YYYY') }}</p>
         </div>
