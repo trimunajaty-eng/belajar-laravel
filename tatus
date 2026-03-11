@@ -1,0 +1,19 @@
+[33mf0f7dd4[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m update report index view
+[33mbdbb398[m delate scrollbar in work-settings
+[33m562979d[m update bahasa di login
+[33md058e55[m Menyeragamkan menu dropdown user pada navbar halaman announcements (create, edit, index)
+[33mf8c801c[m fitur chevron logout di work-settings
+[33m49c7ebf[m ubah warna di employee
+[33mc0e833b[m update author email
+[33m94e64c7[m update tampilan dashboard employee ke tailwind
+[33m47d2ead[m update css ke tailwind di login
+[33m88210e2[m delate custom tailwind
+[33md699849[m fitur toggle chevron di admin bagian users
+[33m4f0277b[m fitur chevron menu di admin
+[33md61da72[m fitur toggle password visibility di login
+[33m04453d8[m tambah fitur pagination di employee
+[33m8d3ebb9[m menambahkan fitur toggle password visibility pada halaman change-password
+[33m4052059[m menambahkan fitur ganti password bagi employee
+[33m504d298[m menambahkan animasi tampilan loading logout dan login
+[33m0d9ca43[m add navbar fitur employee
+[33m7d50728[m first commit

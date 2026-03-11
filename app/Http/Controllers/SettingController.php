@@ -10,7 +10,7 @@ class SettingController extends Controller
 {
     public function index()
     {
-        return view('settings.index');
+        return view('admin.settings.index');
     }
 
     public function update(Request $request)
