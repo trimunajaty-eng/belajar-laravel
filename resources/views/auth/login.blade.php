@@ -18,40 +18,40 @@
                     </div>
                     <div>
                         <h1 class="text-lg font-semibold tracking-wide">Attendance App</h1>
-                        <p class="text-sm text-slate-300">Employee Management System</p>
+                        <p class="text-sm text-slate-300">Sistem Manajemen Karyawan</p>
                     </div>
                 </div>
             </div>
 
             <div class="max-w-md">
                 <p class="mb-4 inline-flex items-center rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-slate-200">
-                    Modern SaaS Login
+                    Login Modern SaaS
                 </p>
                 <h2 class="text-4xl font-bold leading-tight">
-                    Welcome back to your admin workspace.
+                    Selamat datang kembali ke ruang kerja admin Anda.
                 </h2>
                 <p class="mt-5 text-base leading-7 text-slate-300">
-                    Manage employees, attendance, schedules, and reports in one clean dashboard built for daily operations.
+                    Kelola karyawan, absensi, jadwal, dan laporan dalam satu dashboard yang bersih untuk operasional harian.
                 </p>
 
                 <div class="mt-10 grid grid-cols-3 gap-4">
                     <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
                         <div class="text-2xl font-bold">24/7</div>
-                        <div class="mt-1 text-xs text-slate-300">Access Anywhere</div>
+                        <div class="mt-1 text-xs text-slate-300">Akses Dimana Saja</div>
                     </div>
                     <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
-                        <div class="text-2xl font-bold">Fast</div>
-                        <div class="mt-1 text-xs text-slate-300">Daily Workflow</div>
+                        <div class="text-2xl font-bold">Cepat</div>
+                        <div class="mt-1 text-xs text-slate-300">Alur Kerja Harian</div>
                     </div>
                     <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
-                        <div class="text-2xl font-bold">Secure</div>
-                        <div class="mt-1 text-xs text-slate-300">Session Based</div>
+                        <div class="text-2xl font-bold">Aman</div>
+                        <div class="mt-1 text-xs text-slate-300">Berbasis Sesi</div>
                     </div>
                 </div>
             </div>
 
             <div class="text-sm text-slate-400">
-                © {{ date('Y') }} Attendance App. All rights reserved.
+                © {{ date('Y') }} Attendance App. Hak cipta dilindungi.
             </div>
         </div>
 
@@ -65,15 +65,15 @@
                     </div>
                     <div>
                         <h1 class="text-base font-semibold text-slate-900">Attendance App</h1>
-                        <p class="text-xs text-slate-500">Employee Management System</p>
+                        <p class="text-xs text-slate-500">Sistem Manajemen Karyawan</p>
                     </div>
                 </div>
 
                 <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-xl shadow-slate-200/60 sm:p-8">
                     <div class="mb-8">
-                        <h2 class="text-2xl font-bold text-slate-900">Sign in</h2>
+                        <h2 class="text-2xl font-bold text-slate-900">Masuk</h2>
                         <p class="mt-2 text-sm text-slate-500">
-                            Please enter your account details to continue.
+                            Silakan masukkan detail akun Anda untuk melanjutkan.
                         </p>
                     </div>
                     
@@ -102,7 +102,7 @@
                                     value="{{ old('email') }}"
                                     required
                                     class="w-full rounded-2xl border border-slate-200 bg-white py-3 pl-11 pr-4 text-sm text-slate-800 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
-                                    placeholder="Enter your email"
+                                    placeholder="Masukkan email Anda"
                                 >
                             </div>
                             @error('email')
@@ -126,7 +126,7 @@
                                     name="password"
                                     required
                                     class="w-full rounded-2xl border border-slate-200 bg-white py-3 pl-11 pr-11 text-sm text-slate-800 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
-                                    placeholder="Enter your password"
+                                    placeholder="Masukkan password Anda"
                                 >
                                 <i class="fas fa-eye toggle-password absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-slate-400 transition hover:text-blue-500" onclick="togglePassword()"></i>
                             </div>
@@ -145,7 +145,7 @@
                     </form>
 
                     <div class="mt-6 border-t border-slate-100 pt-5 text-center text-xs text-slate-400">
-                        Secure login for authorized users only.
+                        Login aman hanya untuk pengguna yang berwenang.
                     </div>
                 </div>
             </div>
