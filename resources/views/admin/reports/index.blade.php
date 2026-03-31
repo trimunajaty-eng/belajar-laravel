@@ -4,16 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laporan Kehadiran - Admin</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="/css/fontawesome/all.min.css" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { height: 100%; overflow-x: hidden; }
         body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: #f8fafc; color: #334155; line-height: 1.6; }
         
-        .navbar { background: #ffffff; border-bottom: 1px solid #e2e8f0; padding: 1rem 2rem; position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; height: 64px; }
-        .navbar h1 { font-size: 1.5rem; color: #1e293b; font-weight: 600; }
+        .navbar { background: #ffffff; border-bottom: 1px solid #e2e8f0; padding: 1rem; display: flex; justify-content: space-between; align-items: center; position: fixed; top: 0; left: 0; right: 0; z-index: 1000; height: 64px; }
+        .navbar h1 { font-size: 1.25rem; font-weight: 600; color: #1e293b; display: flex; align-items: center; }
         .user-info { position: relative; display: flex; align-items: center; gap: 0.5rem; cursor: pointer; padding: 0.5rem; border-radius: 8px; transition: background 0.2s; }
         .user-info:hover { background: #f8fafc; }
-        .user-avatar { width: 36px; height: 36px; border-radius: 8px; background: #dc2626; color: white; display: flex; align-items: center; justify-content: center; font-weight: 500; font-size: 0.875rem; }
+        .user-avatar { width: 36px; height: 36px; border-radius: 8px; background: #dc2626; display: flex; align-items: center; justify-content: center; color: white; font-weight: 500; font-size: 0.875rem; }
         .user-name { font-weight: 500; color: #475569; }
         .chevron { transition: transform 0.3s; font-size: 0.75rem; color: #64748b; }
         .chevron.rotate { transform: rotate(180deg); }
@@ -24,7 +25,7 @@
         .dropdown-item:hover { background: #f8fafc; }
         .dropdown-item i { color: #ef4444; }
         
-        .sidebar { position: fixed; left: 0; top: 64px; bottom: 0; width: 256px; background: #ffffff; border-right: 1px solid #e2e8f0; padding: 1.5rem 0; overflow-y: auto; }
+        .sidebar { position: fixed; left: 0; top: 64px; width: 256px; height: calc(100vh - 64px); background: #ffffff; border-right: 1px solid #e2e8f0; padding: 1.5rem 0; overflow-y: auto; transition: transform 0.3s ease; z-index: 999; }
         .sidebar ul { list-style: none; padding: 0 1rem; }
         .sidebar li { margin-bottom: 0.25rem; }
         .sidebar a { text-decoration: none; color: #64748b; display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; border-radius: 8px; transition: all 0.2s; font-size: 0.875rem; font-weight: 500; }
@@ -32,7 +33,10 @@
         .sidebar a.active { background: #dc2626; color: white; }
         .sidebar i { width: 18px; text-align: center; font-size: 0.875rem; }
         
-        .main-content { margin-left: 256px; margin-top: 64px; padding: 2rem; }
+        .hamburger { display: none; background: none; border: none; font-size: 1.5rem; color: #1e293b; cursor: pointer; padding: 0.5rem; margin-right: 0.5rem; }
+        .sidebar-overlay { display: none; position: fixed; top: 64px; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 998; }
+        
+        .main-content { margin-left: 256px; margin-top: 64px; padding: 2rem; transition: margin-left 0.3s ease; }
         .welcome-card { background: #ffffff; border: 1px solid #e2e8f0; padding: 2rem; border-radius: 12px; margin-bottom: 2rem; }
         .welcome-card h2 { color: #1e293b; font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem; }
         .welcome-card p { color: #64748b; font-size: 0.875rem; }
@@ -78,10 +82,44 @@
         .progress-fill { height: 100%; background: #16a34a; transition: width 0.3s; border-radius: 4px; }
         .progress-fill.warning { background: #d97706; }
         .progress-fill.danger { background: #ef4444; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar { padding: 0.75rem; }
+            .navbar h1 { font-size: 1rem; }
+            .navbar h1 i { font-size: 1rem; margin-right: 0.25rem; }
+            .hamburger { display: block; }
+            .user-name { display: none; }
+            .user-avatar { width: 32px; height: 32px; font-size: 0.75rem; }
+            .logout-btn { padding: 0.5rem 0.75rem; font-size: 0.75rem; }
+            .logout-btn span { display: none; }
+            
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); box-shadow: 2px 0 8px rgba(0,0,0,0.1); }
+            .sidebar-overlay.active { display: block; }
+            
+            .main-content { margin-left: 0; padding: 1rem; }
+            .card { padding: 1rem; }
+            .card h3 { font-size: 1rem; margin-bottom: 1rem; }
+            .filter-form { grid-template-columns: 1fr; }
+            .stat-card { padding: 1rem; }
+            .stat-number { font-size: 1.25rem; }
+            .stat-label { font-size: 0.75rem; }
+            .table th, .table td { padding: 0.5rem 0.25rem; font-size: 0.75rem; }
+            .status-badge { padding: 0.25rem 0.5rem; font-size: 0.625rem; }
+        }
+        
+        @media (max-width: 480px) {
+            .navbar h1 { font-size: 0.875rem; }
+            .navbar h1 i { display: none; }
+        }
     </style>
 </head>
 <body>
     <nav class="navbar">
+        <button class="hamburger" onclick="toggleSidebar()">
+            <i class="fas fa-bars"></i>
+        </button>
         <h1><i class="fas fa-chart-line" style="color: #dc2626; margin-right: 0.5rem;"></i>Admin Dashboard</h1>
         <div class="user-info" onclick="toggleDropdown()">
             <div class="user-avatar">{{ substr(Auth::user()->name, 0, 1) }}</div>
@@ -99,7 +137,8 @@
         </div>
     </nav>
 
-    <div class="sidebar">
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+    <div class="sidebar" id="sidebar">
         <ul>
             <li><a href="{{ route('dashboard') }}"><i class="fas fa-home"></i> Dashboard</a></li>
             <li><a href="{{ route('users.index') }}"><i class="fas fa-users"></i> Users</a></li>
@@ -286,6 +325,13 @@
     </div>
 
     <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
         function toggleDropdown() {
             const dropdown = document.getElementById('dropdownMenu');
             const chevron = document.getElementById('chevron');
@@ -298,7 +344,6 @@
             const userInfo = document.querySelector('.user-info');
             const dropdown = document.getElementById('dropdownMenu');
             const chevron = document.getElementById('chevron');
-            
             if (!userInfo.contains(event.target)) {
                 dropdown.classList.remove('show');
                 chevron.classList.remove('rotate');
