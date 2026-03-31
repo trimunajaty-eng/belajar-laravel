@@ -6,6 +6,7 @@ use App\Models\Attendance;
 use App\Models\Announcement;
 use App\Models\User;
 use App\Models\WorkSetting;
+use App\Models\LeaveRequest;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -52,6 +53,7 @@ class DashboardController extends Controller
         // Get employees who haven't checked in
         $checkedInUserIds = $todayAttendances->pluck('user_id')->toArray();
         $absentEmployees = $employees->whereNotIn('id', $checkedInUserIds);
+        $pendingLeaveCount = LeaveRequest::where('status', 'pending')->count();
         
         return view('admin.dashboard', compact(
             'todayAttendances', 
@@ -60,7 +62,8 @@ class DashboardController extends Controller
             'lateToday', 
             'absentToday',
             'workSetting',
-            'absentEmployees'
+            'absentEmployees',
+            'pendingLeaveCount'
         ));
     }
     

@@ -11,6 +11,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\Employee\PasswordController;
 use App\Http\Controllers\Employee\LeaveRequestController;
+use App\Http\Controllers\Admin\LeaveRequestController as AdminLeaveRequestController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -43,5 +44,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/reports/export', [ReportController::class, 'export'])->name('reports.export');
         Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
         Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
+
+        Route::get('/admin/leave-requests', [AdminLeaveRequestController::class, 'index'])->name('admin.leave-requests.index');
+        Route::post('/admin/leave-requests/{leaveRequest}/approve', [AdminLeaveRequestController::class, 'approve'])->name('admin.leave-requests.approve');
+        Route::post('/admin/leave-requests/{leaveRequest}/reject', [AdminLeaveRequestController::class, 'reject'])->name('admin.leave-requests.reject');
     });
 });
