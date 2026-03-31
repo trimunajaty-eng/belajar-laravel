@@ -211,6 +211,7 @@
             <li><a href="{{ route('work-settings.index') }}"><i class="fas fa-clock"></i> Work Schedule</a></li>
             <li><a href="{{ route('announcements.index') }}"><i class="fas fa-bullhorn"></i> Announcements</a></li>
             <li><a href="{{ route('reports.index') }}"><i class="fas fa-chart-bar"></i> Reports</a></li>
+            <li><a href="{{ route('admin.leave-requests.index') }}"><i class="fas fa-file-medical-alt"></i> Pengajuan</a></li>
             <li><a href="{{ route('settings.index') }}"><i class="fas fa-cog"></i> Settings</a></li>
         </ul>
 

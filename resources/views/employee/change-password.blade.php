@@ -85,6 +85,10 @@
                     <i class="fas fa-cog" style="color: #3b82f6;"></i>
                     <span>Pengaturan</span>
                 </a>
+                <a href="{{ route('employee.leave-requests.index') }}" class="dropdown-item">
+                    <i class="fas fa-file-medical-alt" style="color: #f59e0b;"></i>
+                    <span>Pengajuan</span>
+                </a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit" class="dropdown-item">
