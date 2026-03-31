@@ -273,5 +273,93 @@
         }, 3000);
     </script>
     @endif
+
+    <script>
+    // ── Notification Polling ──────────────────────────────────────
+    const POLL_INTERVAL = 10000; // 10 detik
+    let shownIds = new Set();
+
+    function getIcon(status) {
+        return status === 'approved'
+            ? '<i class="fas fa-check-circle" style="color:#16a34a;font-size:1.25rem;"></i>'
+            : '<i class="fas fa-times-circle" style="color:#ef4444;font-size:1.25rem;"></i>';
+    }
+
+    function showNotifToast(notif) {
+        const data    = notif.data;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'notif-toast';
+        wrapper.style.cssText = [
+            'position:fixed', 'top:1.25rem', 'right:1.25rem', 'z-index:9999',
+            'display:flex', 'align-items:flex-start', 'gap:0.75rem',
+            'background:white', 'border:1px solid #e2e8f0',
+            'border-radius:1rem', 'padding:1rem 1.25rem',
+            'box-shadow:0 10px 25px rgba(0,0,0,0.12)',
+            'max-width:340px', 'width:90%',
+            'animation:slideIn 0.3s ease',
+        ].join(';');
+
+        wrapper.innerHTML = `
+            ${getIcon(data.status)}
+            <div style="flex:1;">
+                <div style="font-size:0.875rem;font-weight:600;color:#1e293b;margin-bottom:0.2rem;">
+                    Pengajuan ${data.type.charAt(0).toUpperCase()+data.type.slice(1)}
+                    ${data.status === 'approved' ? '<span style="color:#16a34a;">Disetujui</span>' : '<span style="color:#ef4444;">Ditolak</span>'}
+                </div>
+                <div style="font-size:0.8rem;color:#64748b;">${data.message}</div>
+                ${data.admin_note ? `<div style="font-size:0.75rem;color:#94a3b8;margin-top:0.3rem;"><i class="fas fa-reply"></i> ${data.admin_note}</div>` : ''}
+                <div style="font-size:0.7rem;color:#cbd5e1;margin-top:0.3rem;">${notif.created}</div>
+            </div>
+            <button onclick="dismissToast(this, '${notif.id}')" style="background:none;border:none;cursor:pointer;color:#94a3b8;font-size:1rem;padding:0;line-height:1;">&times;</button>
+        `;
+
+        document.body.appendChild(wrapper);
+
+        // Auto dismiss setelah 8 detik
+        setTimeout(() => dismissToast(wrapper.querySelector('button'), notif.id), 8000);
+    }
+
+    function dismissToast(btn, id) {
+        const el = btn.closest('.notif-toast');
+        if (!el) return;
+        el.style.opacity = '0';
+        el.style.transform = 'translateX(100%)';
+        el.style.transition = 'all 0.3s ease';
+        setTimeout(() => el.remove(), 300);
+
+        // Tandai sudah dibaca
+        fetch(`/api/notifications/${id}/read`, {
+            method: 'POST',
+            headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Content-Type': 'application/json' }
+        });
+    }
+
+    async function pollNotifications() {
+        try {
+            const res  = await fetch('/api/notifications/unread');
+            const list = await res.json();
+
+            list.forEach(notif => {
+                if (!shownIds.has(notif.id)) {
+                    shownIds.add(notif.id);
+                    showNotifToast(notif);
+                }
+            });
+        } catch (e) {
+            // silent fail
+        }
+    }
+
+    // Jalankan saat halaman load + tiap 10 detik
+    pollNotifications();
+    setInterval(pollNotifications, POLL_INTERVAL);
+    </script>
+
+    <style>
+    @keyframes slideIn {
+        from { opacity: 0; transform: translateX(100%); }
+        to   { opacity: 1; transform: translateX(0); }
+    }
+    </style>
 </body>
 </html>

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Kelola Pengajuan</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -305,7 +306,7 @@
             <h3><i class="fas fa-check-circle" style="color:#16a34a;margin-right:0.5rem;"></i>Setujui Pengajuan</h3>
             <p id="approveDesc">Anda akan menyetujui pengajuan ini.</p>
             <form method="POST" id="formApprove">
-                @csrf
+                <input type="hidden" name="_token" id="csrfApprove" value="{{ csrf_token() }}">
                 <label style="font-size:0.8rem;font-weight:500;color:#475569;display:block;margin-bottom:0.4rem;">Catatan (opsional)</label>
                 <textarea name="admin_note" rows="3" placeholder="Tambahkan catatan untuk karyawan..."></textarea>
                 <div class="modal-actions">
@@ -322,7 +323,7 @@
             <h3><i class="fas fa-times-circle" style="color:#ef4444;margin-right:0.5rem;"></i>Tolak Pengajuan</h3>
             <p id="rejectDesc">Anda akan menolak pengajuan ini.</p>
             <form method="POST" id="formReject">
-                @csrf
+                <input type="hidden" name="_token" id="csrfReject" value="{{ csrf_token() }}">
                 <label style="font-size:0.8rem;font-weight:500;color:#475569;display:block;margin-bottom:0.4rem;">Alasan penolakan (opsional)</label>
                 <textarea name="admin_note" rows="3" placeholder="Tuliskan alasan penolakan..."></textarea>
                 <div class="modal-actions">
@@ -352,7 +353,23 @@
             }
         });
 
+        async function refreshCsrf() {
+            try {
+                const res  = await fetch('/sanctum/csrf-cookie', { credentials: 'same-origin' });
+                const html = await fetch(window.location.href, { credentials: 'same-origin' });
+                const text = await html.text();
+                const match = text.match(/name="_token"\s+value="([^"]+)"/);
+                if (match) {
+                    const token = match[1];
+                    document.querySelector('meta[name="csrf-token"]').setAttribute('content', token);
+                    document.getElementById('csrfApprove').value = token;
+                    document.getElementById('csrfReject').value  = token;
+                }
+            } catch(e) {}
+        }
+
         function openModal(type, id, name) {
+            refreshCsrf();
             if (type === 'approve') {
                 document.getElementById('approveDesc').textContent = 'Anda akan menyetujui pengajuan dari ' + name + '.';
                 document.getElementById('formApprove').action = '/admin/leave-requests/' + id + '/approve';

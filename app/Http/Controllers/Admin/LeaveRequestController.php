@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\LeaveRequest;
+use App\Notifications\LeaveRequestReviewed;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -34,6 +35,8 @@ class LeaveRequestController extends Controller
             'reviewed_at' => now(),
         ]);
 
+        $leaveRequest->user->notify(new LeaveRequestReviewed($leaveRequest->fresh()));
+
         return back()->with('success', "Pengajuan {$leaveRequest->user->name} telah disetujui.");
     }
 
@@ -47,6 +50,8 @@ class LeaveRequestController extends Controller
             'reviewed_by' => Auth::id(),
             'reviewed_at' => now(),
         ]);
+
+        $leaveRequest->user->notify(new LeaveRequestReviewed($leaveRequest->fresh()));
 
         return back()->with('success', "Pengajuan {$leaveRequest->user->name} telah ditolak.");
     }
