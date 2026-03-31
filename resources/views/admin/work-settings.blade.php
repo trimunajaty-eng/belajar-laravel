@@ -110,7 +110,7 @@
         <button class="hamburger" onclick="toggleSidebar()">
             <i class="fas fa-bars"></i>
         </button>
-        <h1><i class="fas fa-chart-line" style="color: #dc2626; margin-right: 0.5rem;"></i>Dasbor Admin</h1>
+        <h1><i class="fas fa-chart-line" style="color: #dc2626; margin-right: 0.5rem;"></i>Admin Dashboard</h1>
         <div class="user-info" onclick="toggleDropdown()">
             <div class="user-avatar">{{ substr(Auth::user()->name, 0, 1) }}</div>
             <span class="user-name">{{ Auth::user()->name }}</span>
@@ -120,7 +120,7 @@
                     @csrf
                     <button type="submit" class="dropdown-item">
                         <i class="fas fa-sign-out-alt"></i>
-                        <span>Keluar</span>
+                        <span>Logout</span>
                     </button>
                 </form>
             </div>
@@ -130,12 +130,12 @@
     <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
     <div class="sidebar" id="sidebar">
         <ul>
-            <li><a href="{{ route('dashboard') }}"><i class="fas fa-home"></i> Dasbor</a></li>
-            <li><a href="{{ route('users.index') }}"><i class="fas fa-users"></i> Pengguna</a></li>
-            <li><a href="{{ route('work-settings.index') }}" class="active"><i class="fas fa-clock"></i> Jadwal Kerja</a></li>
-            <li><a href="{{ route('announcements.index') }}"><i class="fas fa-bullhorn"></i> Pengumuman</a></li>
-            <li><a href="{{ route('reports.index') }}"><i class="fas fa-chart-bar"></i> Laporan</a></li>
-            <li><a href="{{ route('settings.index') }}"><i class="fas fa-cog"></i> Pengaturan</a></li>
+            <li><a href="{{ route('dashboard') }}"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="{{ route('users.index') }}"><i class="fas fa-users"></i> Users</a></li>
+            <li><a href="{{ route('work-settings.index') }}" class="active"><i class="fas fa-clock"></i> Work Schedule</a></li>
+            <li><a href="{{ route('announcements.index') }}"><i class="fas fa-bullhorn"></i> Announcements</a></li>
+            <li><a href="{{ route('reports.index') }}"><i class="fas fa-chart-bar"></i> Reports</a></li>
+            <li><a href="{{ route('settings.index') }}"><i class="fas fa-cog"></i> Settings</a></li>
         </ul>
     </div>
 
