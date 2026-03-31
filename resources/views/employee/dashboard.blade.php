@@ -39,6 +39,11 @@
                         <span>Pengaturan</span>
                     </a>
 
+                    <a href="{{ route('employee.leave-requests.index') }}" class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-700 transition hover:bg-slate-50">
+                        <i class="fas fa-file-medical-alt text-amber-500"></i>
+                        <span>Pengajuan</span>
+                    </a>
+
                     <form method="POST" action="{{ route('logout') }}" onsubmit="showLogoutAnimation(event)">
                         @csrf
                         <button type="submit" class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm text-slate-700 transition hover:bg-slate-50">

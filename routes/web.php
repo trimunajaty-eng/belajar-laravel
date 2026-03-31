@@ -10,6 +10,7 @@ use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\Employee\PasswordController;
+use App\Http\Controllers\Employee\LeaveRequestController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -27,6 +28,10 @@ Route::middleware('auth')->group(function () {
     
     Route::get('/employee/change-password', [PasswordController::class, 'edit'])->name('employee.change-password');
     Route::post('/employee/change-password', [PasswordController::class, 'update'])->name('employee.change-password.update');
+
+    Route::get('/employee/leave-requests', [LeaveRequestController::class, 'index'])->name('employee.leave-requests.index');
+    Route::get('/employee/leave-requests/create', [LeaveRequestController::class, 'create'])->name('employee.leave-requests.create');
+    Route::post('/employee/leave-requests', [LeaveRequestController::class, 'store'])->name('employee.leave-requests.store');
     
     Route::middleware('admin')->group(function () {
         Route::resource('users', UserController::class);
