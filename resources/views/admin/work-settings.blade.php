@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Work Schedule Settings</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>Pengaturan Jadwal Kerja</title>
+    <link href="{{ asset('css/fontawesome/all.min.css') }}" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body { height: 100%; overflow-x: hidden; }
@@ -12,6 +12,7 @@
         
         .navbar { background: #ffffff; border-bottom: 1px solid #e2e8f0; padding: 1rem; display: flex; justify-content: space-between; align-items: center; position: fixed; top: 0; left: 0; right: 0; z-index: 1000; height: 64px; }
         .navbar h1 { font-size: 1.25rem; font-weight: 600; color: #1e293b; display: flex; align-items: center; }
+
         .user-info { position: relative; display: flex; align-items: center; gap: 0.5rem; cursor: pointer; padding: 0.5rem; border-radius: 8px; transition: background 0.2s; }
         .user-info:hover { background: #f8fafc; }
         .user-avatar { width: 36px; height: 36px; border-radius: 8px; background: #dc2626; display: flex; align-items: center; justify-content: center; color: white; font-weight: 500; font-size: 0.875rem; }
@@ -109,7 +110,7 @@
         <button class="hamburger" onclick="toggleSidebar()">
             <i class="fas fa-bars"></i>
         </button>
-        <h1><i class="fas fa-chart-line" style="color: #dc2626; margin-right: 0.5rem;"></i>Admin Dashboard</h1>
+        <h1><i class="fas fa-chart-line" style="color: #dc2626; margin-right: 0.5rem;"></i>Dasbor Admin</h1>
         <div class="user-info" onclick="toggleDropdown()">
             <div class="user-avatar">{{ substr(Auth::user()->name, 0, 1) }}</div>
             <span class="user-name">{{ Auth::user()->name }}</span>
@@ -119,7 +120,7 @@
                     @csrf
                     <button type="submit" class="dropdown-item">
                         <i class="fas fa-sign-out-alt"></i>
-                        <span>Logout</span>
+                        <span>Keluar</span>
                     </button>
                 </form>
             </div>
@@ -129,12 +130,12 @@
     <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
     <div class="sidebar" id="sidebar">
         <ul>
-            <li><a href="{{ route('dashboard') }}"><i class="fas fa-home"></i> Dashboard</a></li>
-            <li><a href="{{ route('users.index') }}"><i class="fas fa-users"></i> Users</a></li>
-            <li><a href="{{ route('work-settings.index') }}" class="active"><i class="fas fa-clock"></i> Work Schedule</a></li>
-            <li><a href="{{ route('announcements.index') }}"><i class="fas fa-bullhorn"></i> Announcements</a></li>
-            <li><a href="{{ route('reports.index') }}"><i class="fas fa-chart-bar"></i> Reports</a></li>
-            <li><a href="{{ route('settings.index') }}"><i class="fas fa-cog"></i> Settings</a></li>
+            <li><a href="{{ route('dashboard') }}"><i class="fas fa-home"></i> Dasbor</a></li>
+            <li><a href="{{ route('users.index') }}"><i class="fas fa-users"></i> Pengguna</a></li>
+            <li><a href="{{ route('work-settings.index') }}" class="active"><i class="fas fa-clock"></i> Jadwal Kerja</a></li>
+            <li><a href="{{ route('announcements.index') }}"><i class="fas fa-bullhorn"></i> Pengumuman</a></li>
+            <li><a href="{{ route('reports.index') }}"><i class="fas fa-chart-bar"></i> Laporan</a></li>
+            <li><a href="{{ route('settings.index') }}"><i class="fas fa-cog"></i> Pengaturan</a></li>
         </ul>
     </div>
 
@@ -146,25 +147,25 @@
         @endif
 
         <div class="card">
-            <h3><i class="fas fa-clock"></i> Work Schedule Settings</h3>
+            <h3><i class="fas fa-clock"></i> Pengaturan Jadwal Kerja</h3>
             
             <div class="info-box">
                 <i class="fas fa-info-circle"></i>
-                <strong>Important:</strong> Changes to work schedule will affect all employees immediately. Late threshold determines when employees are marked as late.
+                <strong>Penting:</strong> Perubahan jadwal kerja akan langsung berlaku untuk semua karyawan. Batas keterlambatan menentukan kapan karyawan dianggap terlambat.
             </div>
 
             <div class="current-settings">
-                <h4 style="margin-bottom: 1rem; color: #1e293b;">Current Schedule</h4>
+                <h4 style="margin-bottom: 1rem; color: #1e293b;">Jadwal Saat Ini</h4>
                 <div class="setting-item">
-                    <span class="setting-label">Work Start Time</span>
+                    <span class="setting-label">Jam Mulai Kerja</span>
                     <span class="setting-value">{{ $workSetting->work_start_time ? \Carbon\Carbon::parse($workSetting->work_start_time)->format('H:i') : '08:00' }}</span>
                 </div>
                 <div class="setting-item">
-                    <span class="setting-label">Late Threshold</span>
+                    <span class="setting-label">Batas Keterlambatan</span>
                     <span class="setting-value">{{ $workSetting->late_threshold ? \Carbon\Carbon::parse($workSetting->late_threshold)->format('H:i') : '09:00' }}</span>
                 </div>
                 <div class="setting-item">
-                    <span class="setting-label">Work End Time</span>
+                    <span class="setting-label">Jam Selesai Kerja</span>
                     <span class="setting-value">{{ $workSetting->work_end_time ? \Carbon\Carbon::parse($workSetting->work_end_time)->format('H:i') : '17:00' }}</span>
                 </div>
             </div>
@@ -176,7 +177,7 @@
                     <div class="form-group">
                         <label for="work_start_time">
                             <i class="fas fa-play-circle" style="color: #16a34a; margin-right: 0.25rem;"></i>
-                            Work Start Time
+                            Jam Mulai Kerja
                         </label>
                         <input type="time" 
                                id="work_start_time" 
@@ -192,7 +193,7 @@
                     <div class="form-group">
                         <label for="late_threshold">
                             <i class="fas fa-exclamation-triangle" style="color: #d97706; margin-right: 0.25rem;"></i>
-                            Late Threshold
+                            Batas Keterlambatan
                         </label>
                         <input type="time" 
                                id="late_threshold" 
@@ -203,13 +204,13 @@
                         @error('late_threshold')
                             <div style="color: #ef4444; font-size: 0.875rem; margin-top: 0.25rem;">{{ $message }}</div>
                         @enderror
-                        <small style="color: #64748b; font-size: 0.75rem;">Employees checking in after this time will be marked as late</small>
+                        <small style="color: #64748b; font-size: 0.75rem;">Karyawan yang absen setelah waktu ini akan ditandai terlambat</small>
                     </div>
 
                     <div class="form-group">
                         <label for="work_end_time">
                             <i class="fas fa-stop-circle" style="color: #ef4444; margin-right: 0.25rem;"></i>
-                            Work End Time
+                            Jam Selesai Kerja
                         </label>
                         <input type="time" 
                                id="work_end_time" 
@@ -224,31 +225,31 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save"></i> Update Work Schedule
+                    <i class="fas fa-save"></i> Simpan Jadwal Kerja
                 </button>
             </form>
         </div>
 
         <div class="card">
-            <h3><i class="fas fa-info-circle"></i> Schedule Guidelines</h3>
+            <h3><i class="fas fa-info-circle"></i> Panduan Jadwal</h3>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
                 <div style="padding: 1rem; background: #f0fdf4; border-radius: 8px; border-left: 4px solid #16a34a;">
                     <h4 style="color: #16a34a; margin-bottom: 0.5rem;">
-                        <i class="fas fa-check-circle"></i> On Time
+                        <i class="fas fa-check-circle"></i> Tepat Waktu
                     </h4>
-                    <p style="font-size: 0.875rem; color: #166534;">Employees who check in before the late threshold</p>
+                    <p style="font-size: 0.875rem; color: #166534;">Karyawan yang absen sebelum batas keterlambatan</p>
                 </div>
                 <div style="padding: 1rem; background: #fffbeb; border-radius: 8px; border-left: 4px solid #d97706;">
                     <h4 style="color: #d97706; margin-bottom: 0.5rem;">
-                        <i class="fas fa-clock"></i> Late
+                        <i class="fas fa-clock"></i> Terlambat
                     </h4>
-                    <p style="font-size: 0.875rem; color: #92400e;">Employees who check in after the late threshold</p>
+                    <p style="font-size: 0.875rem; color: #92400e;">Karyawan yang absen setelah batas keterlambatan</p>
                 </div>
                 <div style="padding: 1rem; background: #fef2f2; border-radius: 8px; border-left: 4px solid #ef4444;">
                     <h4 style="color: #ef4444; margin-bottom: 0.5rem;">
-                        <i class="fas fa-times-circle"></i> Absent
+                        <i class="fas fa-times-circle"></i> Tidak Hadir
                     </h4>
-                    <p style="font-size: 0.875rem; color: #991b1b;">Employees who haven't checked in</p>
+                    <p style="font-size: 0.875rem; color: #991b1b;">Karyawan yang belum melakukan absen</p>
                 </div>
             </div>
         </div>
