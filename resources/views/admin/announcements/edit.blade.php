@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Announcement</title>
+    <title>Edit Pengumuman</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -120,14 +120,14 @@
 
     <div class="main-content">
         <div class="card">
-            <h2><i class="fas fa-edit"></i> Edit Announcement</h2>
+            <h2><i class="fas fa-edit"></i> Edit Pengumuman</h2>
             
             <form method="POST" action="{{ route('announcements.update', $announcement->id) }}">
                 @csrf
                 @method('PUT')
                 
                 <div class="form-group">
-                    <label for="title">Title</label>
+                    <label for="title">Judul</label>
                     <input type="text" id="title" name="title" class="form-control" value="{{ old('title', $announcement->title) }}" required>
                     @error('title')
                         <div style="color: #ef4444; font-size: 0.875rem; margin-top: 0.25rem;">{{ $message }}</div>
@@ -135,11 +135,11 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="type">Type</label>
+                    <label for="type">Jenis</label>
                     <select id="type" name="type" class="form-control" required>
-                        <option value="general" {{ old('type', $announcement->type) === 'general' ? 'selected' : '' }}>General</option>
-                        <option value="meeting" {{ old('type', $announcement->type) === 'meeting' ? 'selected' : '' }}>Meeting</option>
-                        <option value="urgent" {{ old('type', $announcement->type) === 'urgent' ? 'selected' : '' }}>Urgent</option>
+                        <option value="general" {{ old('type', $announcement->type) === 'general' ? 'selected' : '' }}>Umum</option>
+                        <option value="meeting" {{ old('type', $announcement->type) === 'meeting' ? 'selected' : '' }}>Rapat</option>
+                        <option value="urgent" {{ old('type', $announcement->type) === 'urgent' ? 'selected' : '' }}>Mendesak</option>
                     </select>
                     @error('type')
                         <div style="color: #ef4444; font-size: 0.875rem; margin-top: 0.25rem;">{{ $message }}</div>
@@ -147,7 +147,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="content">Content</label>
+                    <label for="content">Isi Pengumuman</label>
                     <textarea id="content" name="content" class="form-control" required>{{ old('content', $announcement->content) }}</textarea>
                     @error('content')
                         <div style="color: #ef4444; font-size: 0.875rem; margin-top: 0.25rem;">{{ $message }}</div>
@@ -155,7 +155,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="meeting_date">Meeting Date (Optional)</label>
+                    <label for="meeting_date">Tanggal Rapat (Opsional)</label>
                     <input type="datetime-local" id="meeting_date" name="meeting_date" class="form-control" value="{{ old('meeting_date', $announcement->meeting_date ? \Carbon\Carbon::parse($announcement->meeting_date)->format('Y-m-d\TH:i') : '') }}">
                     @error('meeting_date')
                         <div style="color: #ef4444; font-size: 0.875rem; margin-top: 0.25rem;">{{ $message }}</div>
@@ -164,10 +164,10 @@
 
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save"></i> Update Announcement
+                        <i class="fas fa-save"></i> Simpan Perubahan
                     </button>
                     <a href="{{ route('announcements.index') }}" class="btn btn-secondary">
-                        <i class="fas fa-times"></i> Cancel
+                        <i class="fas fa-times"></i> Batal
                     </a>
                 </div>
             </form>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Settings</title>
+    <title>Pengaturan Akun</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -123,16 +123,16 @@
 
         <div class="card">
             <div class="card-header">
-                <h2><i class="fas fa-user-cog"></i> Profile Settings</h2>
+                <h2><i class="fas fa-user-cog"></i> Pengaturan Profil</h2>
             </div>
 
             <form method="POST" action="{{ route('settings.update') }}">
                 @csrf
 
-                <div class="section-title">Account Information</div>
+                <div class="section-title">Informasi Akun</div>
 
                 <div class="form-group">
-                    <label for="name">Name</label>
+                    <label for="name">Nama</label>
                     <input type="text" id="name" name="name" value="{{ old('name', Auth::user()->name) }}" required>
                     @error('name')
                         <div style="color: #dc2626; font-size: 0.75rem; margin-top: 0.25rem;">{{ $message }}</div>
@@ -149,10 +149,10 @@
 
                 <div class="divider"></div>
 
-                <div class="section-title">Change Password</div>
+                <div class="section-title">Ubah Password</div>
 
                 <div class="form-group">
-                    <label for="current_password">Current Password</label>
+                    <label for="current_password">Password Saat Ini</label>
                     <input type="password" id="current_password" name="current_password">
                     @error('current_password')
                         <div style="color: #dc2626; font-size: 0.75rem; margin-top: 0.25rem;">{{ $message }}</div>
@@ -160,7 +160,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="new_password">New Password</label>
+                    <label for="new_password">Password Baru</label>
                     <input type="password" id="new_password" name="new_password">
                     @error('new_password')
                         <div style="color: #dc2626; font-size: 0.75rem; margin-top: 0.25rem;">{{ $message }}</div>
@@ -168,12 +168,12 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="new_password_confirmation">Confirm New Password</label>
+                    <label for="new_password_confirmation">Konfirmasi Password Baru</label>
                     <input type="password" id="new_password_confirmation" name="new_password_confirmation">
                 </div>
 
                 <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save"></i> Save Changes
+                    <i class="fas fa-save"></i> Simpan Perubahan
                 </button>
             </form>
         </div>

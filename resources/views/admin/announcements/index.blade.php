@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Announcements</title>
+    <title>Pengumuman</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -146,9 +146,9 @@
 
         <div class="card">
             <div class="header">
-                <h2><i class="fas fa-bullhorn"></i> Announcements</h2>
+                <h2><i class="fas fa-bullhorn"></i> Daftar Pengumuman</h2>
                 <a href="{{ route('announcements.create') }}" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> New Announcement
+                    <i class="fas fa-plus"></i> Tambah Pengumuman
                 </a>
             </div>
 
@@ -158,18 +158,18 @@
                         <div class="announcement-title">{{ $announcement->title }}</div>
                         <span class="announcement-type type-{{ $announcement->type }}">
                             @if($announcement->type === 'meeting')
-                                <i class="fas fa-calendar"></i> Meeting
+                                <i class="fas fa-calendar"></i> Rapat
                             @elseif($announcement->type === 'urgent')
-                                <i class="fas fa-exclamation-triangle"></i> Urgent
+                                <i class="fas fa-exclamation-triangle"></i> Mendesak
                             @else
-                                <i class="fas fa-info-circle"></i> General
+                                <i class="fas fa-info-circle"></i> Umum
                             @endif
                         </span>
                     </div>
                     <div class="announcement-content">{{ $announcement->content }}</div>
                     @if($announcement->meeting_date)
                         <div class="announcement-date">
-                            <i class="fas fa-calendar-alt"></i> Meeting Date: {{ \Carbon\Carbon::parse($announcement->meeting_date)->format('M d, Y H:i') }}
+                            <i class="fas fa-calendar-alt"></i> Tanggal Rapat: {{ \Carbon\Carbon::parse($announcement->meeting_date)->locale('id')->isoFormat('D MMMM Y HH:mm') }}
                         </div>
                     @endif
                     <div class="announcement-actions">
@@ -179,8 +179,8 @@
                         <form method="POST" action="{{ route('announcements.destroy', $announcement->id) }}" style="display: inline;">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-delete" onclick="return confirm('Delete this announcement?')">
-                                <i class="fas fa-trash"></i> Delete
+                            <button type="submit" class="btn btn-sm btn-delete" onclick="return confirm('Hapus pengumuman ini?')">
+                                <i class="fas fa-trash"></i> Hapus
                             </button>
                         </form>
                     </div>
@@ -188,7 +188,7 @@
             @empty
                 <div style="text-align: center; padding: 3rem; color: #64748b;">
                     <i class="fas fa-bullhorn" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;"></i>
-                    <p>No announcements yet. Create your first announcement!</p>
+                    <p>Belum ada pengumuman. Buat pengumuman pertama Anda!</p>
                 </div>
             @endforelse
         </div>

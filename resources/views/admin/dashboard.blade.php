@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title>Dasbor Admin</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -220,8 +220,8 @@
 
     <div class="main-content">
         <div class="welcome-card">
-            <h2>Welcome back, {{ Auth::user()->name }}!</h2>
-            <p>Today is {{ now()->format('l, F d, Y') }} - Monitor your team's attendance</p>
+            <h2>Selamat datang, {{ Auth::user()->name }}!</h2>
+            <p>Hari ini {{ now()->locale('id')->isoFormat('dddd, D MMMM Y') }} - Pantau kehadiran tim Anda</p>
         </div>
 
         <div class="stats">
@@ -230,65 +230,65 @@
                     <div class="stat-icon total"><i class="fas fa-users"></i></div>
                 </div>
                 <div class="stat-number">{{ $totalEmployees }}</div>
-                <div class="stat-label">Total Employees</div>
+                <div class="stat-label">Total Karyawan</div>
             </div>
             <div class="stat-card">
                 <div class="stat-header">
                     <div class="stat-icon present"><i class="fas fa-check-circle"></i></div>
                 </div>
                 <div class="stat-number">{{ $presentToday }}</div>
-                <div class="stat-label">Present Today</div>
+                <div class="stat-label">Hadir Hari Ini</div>
             </div>
             <div class="stat-card">
                 <div class="stat-header">
                     <div class="stat-icon late"><i class="fas fa-clock"></i></div>
                 </div>
                 <div class="stat-number">{{ $lateToday }}</div>
-                <div class="stat-label">Late Today</div>
+                <div class="stat-label">Terlambat Hari Ini</div>
             </div>
             <div class="stat-card">
                 <div class="stat-header">
                     <div class="stat-icon absent"><i class="fas fa-times-circle"></i></div>
                 </div>
                 <div class="stat-number">{{ $absentToday }}</div>
-                <div class="stat-label">Absent Today</div>
+                <div class="stat-label">Tidak Hadir Hari Ini</div>
             </div>
         </div>
 
         <div class="card">
-            <h3><i class="fas fa-cog"></i> Work Time Settings</h3>
+            <h3><i class="fas fa-cog"></i> Pengaturan Jam Kerja</h3>
             <div class="work-settings">
                 <div class="setting-item">
-                    <div class="setting-label">Work Start Time</div>
+                    <div class="setting-label">Jam Mulai Kerja</div>
                     <div class="setting-time">{{ $workSetting->work_start_time ? \Carbon\Carbon::parse($workSetting->work_start_time)->format('H:i') : '08:00' }}</div>
                 </div>
                 <div class="setting-item">
-                    <div class="setting-label">Late Threshold</div>
+                    <div class="setting-label">Batas Keterlambatan</div>
                     <div class="setting-time">{{ $workSetting->late_threshold ? \Carbon\Carbon::parse($workSetting->late_threshold)->format('H:i') : '09:00' }}</div>
                 </div>
                 <div class="setting-item">
-                    <div class="setting-label">Work End Time</div>
+                    <div class="setting-label">Jam Selesai Kerja</div>
                     <div class="setting-time">{{ $workSetting->work_end_time ? \Carbon\Carbon::parse($workSetting->work_end_time)->format('H:i') : '17:00' }}</div>
                 </div>
             </div>
             <div style="margin-top: 1rem;">
                 <a href="{{ route('work-settings.index') }}" class="btn btn-primary" style="display: inline-block; padding: 0.5rem 1rem; background: #dc2626; color: white; text-decoration: none; border-radius: 6px; font-size: 0.875rem;">
-                    <i class="fas fa-edit"></i> Edit Schedule
+                    <i class="fas fa-edit"></i> Ubah Jadwal
                 </a>
             </div>
         </div>
 
         <div class="card">
-            <h3><i class="fas fa-calendar-check"></i> Today's Attendance ({{ now()->format('M d, Y') }})</h3>
+            <h3><i class="fas fa-calendar-check"></i> Kehadiran Hari Ini ({{ now()->locale('id')->isoFormat('D MMMM Y') }})</h3>
             <div class="table-wrapper">
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Employee</th>
-                            <th>Check In</th>
-                            <th>Check Out</th>
+                            <th>Karyawan</th>
+                            <th>Masuk</th>
+                            <th>Keluar</th>
                             <th>Status</th>
-                            <th>Working Hours</th>
+                            <th>Jam Kerja</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -307,7 +307,7 @@
                                         @endif
                                     </span>
                                 @else
-                                    <span style="color: #64748b;">Not checked in</span>
+                                    <span style="color: #64748b;">Belum absen masuk</span>
                                 @endif
                             </td>
                             <td>
@@ -316,7 +316,7 @@
                                 @else
                                     <span style="color: #3b82f6; font-weight: 500;">
                                         <i class="fas fa-circle" style="font-size: 0.5rem; margin-right: 0.25rem;"></i>
-                                        Still working
+                                        Sedang bekerja
                                     </span>
                                 @endif
                             </td>
@@ -327,7 +327,11 @@
                                     @elseif($attendance->status === 'present')
                                         <i class="fas fa-check"></i>
                                     @endif
-                                    {{ ucfirst($attendance->status) }}
+                                    @if($attendance->status === 'present') Hadir
+                                    @elseif($attendance->status === 'late') Terlambat
+                                    @elseif($attendance->status === 'absent') Tidak Hadir
+                                    @else {{ ucfirst($attendance->status) }}
+                                    @endif
                                 </span>
                             </td>
                             <td>
@@ -338,7 +342,7 @@
                                         $hours = $checkOut->diffInHours($checkIn);
                                         $minutes = $checkOut->diffInMinutes($checkIn) % 60;
                                     @endphp
-                                    <strong>{{ $hours }}h {{ $minutes }}m</strong>
+                                    <strong>{{ $hours }}j {{ $minutes }}m</strong>
                                 @elseif($attendance->check_in)
                                     @php
                                         $checkIn = \Carbon\Carbon::parse($attendance->check_in);
@@ -346,7 +350,7 @@
                                         $hours = $now->diffInHours($checkIn);
                                         $minutes = $now->diffInMinutes($checkIn) % 60;
                                     @endphp
-                                    <span style="color: #3b82f6;">{{ $hours }}h {{ $minutes }}m (ongoing)</span>
+                                    <span style="color: #3b82f6;">{{ $hours }}j {{ $minutes }}m (berlangsung)</span>
                                 @else
                                     <span style="color: #64748b;">-</span>
                                 @endif
@@ -356,7 +360,7 @@
                         <tr>
                             <td colspan="5" style="text-align: center; color: #64748b; padding: 2rem;">
                                 <i class="fas fa-calendar-times" style="font-size: 2rem; margin-bottom: 0.5rem; display: block;"></i>
-                                No attendance records for today
+                                Belum ada data kehadiran hari ini
                             </td>
                         </tr>
                         @endforelse
@@ -368,11 +372,11 @@
                                     <strong>{{ $employee->name }}</strong>
                                     <br><small style="color: #64748b;">{{ $employee->email }}</small>
                                 </td>
-                                <td><span style="color: #ef4444;">Not checked in</span></td>
+                                <td><span style="color: #ef4444;">Belum absen masuk</span></td>
                                 <td><span style="color: #64748b;">-</span></td>
                                 <td>
                                     <span class="status-badge status-absent">
-                                        <i class="fas fa-times"></i> Absent
+                                        <i class="fas fa-times"></i> Tidak Hadir
                                     </span>
                                 </td>
                                 <td><span style="color: #64748b;">-</span></td>

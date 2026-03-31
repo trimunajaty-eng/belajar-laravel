@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pengaturan Jadwal Kerja</title>
-    <link href="{{ asset('css/fontawesome/all.min.css') }}" rel="stylesheet">
+    <link href="/css/fontawesome/all.min.css" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body { height: 100%; overflow-x: hidden; }

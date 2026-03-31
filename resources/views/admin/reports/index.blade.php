@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Attendance Reports - Admin</title>
+    <title>Laporan Kehadiran - Admin</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -112,24 +112,24 @@
 
     <div class="main-content">
         <div class="welcome-card">
-            <h2>Attendance Reports</h2>
-            <p>View and analyze attendance data with detailed statistics</p>
+            <h2>Laporan Kehadiran</h2>
+            <p>Lihat dan analisis data kehadiran dengan statistik lengkap</p>
         </div>
 
         <div class="filter-card">
             <form method="GET" action="{{ route('reports.index') }}" class="filter-form">
                 <div class="form-group">
-                    <label>Start Date</label>
+                    <label>Tanggal Mulai</label>
                     <input type="date" name="start_date" value="{{ $startDate }}" required>
                 </div>
                 <div class="form-group">
-                    <label>End Date</label>
+                    <label>Tanggal Akhir</label>
                     <input type="date" name="end_date" value="{{ $endDate }}" required>
                 </div>
                 <div class="form-group">
-                    <label>Employee</label>
+                    <label>Karyawan</label>
                     <select name="user_id">
-                        <option value="">All Employees</option>
+                        <option value="">Semua Karyawan</option>
                         @foreach($users as $user)
                             <option value="{{ $user->id }}" {{ $userId == $user->id ? 'selected' : '' }}>
                                 {{ $user->name }}
@@ -139,12 +139,12 @@
                 </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-filter"></i> Filter
+                        <i class="fas fa-filter"></i> Terapkan
                     </button>
                 </div>
                 <div class="form-group">
                     <a href="{{ route('reports.export', request()->query()) }}" class="btn btn-success">
-                        <i class="fas fa-download"></i> Export CSV
+                        <i class="fas fa-download"></i> Ekspor CSV
                     </a>
                 </div>
             </form>
@@ -154,37 +154,37 @@
             <div class="stat-card">
                 <div class="stat-icon present"><i class="fas fa-check-circle"></i></div>
                 <div class="stat-number">{{ $totalPresent }}</div>
-                <div class="stat-label">Total Present</div>
+                <div class="stat-label">Total Hadir</div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon late"><i class="fas fa-clock"></i></div>
                 <div class="stat-number">{{ $totalLate }}</div>
-                <div class="stat-label">Total Late</div>
+                <div class="stat-label">Total Terlambat</div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon absent"><i class="fas fa-times-circle"></i></div>
                 <div class="stat-number">{{ $totalAbsent }}</div>
-                <div class="stat-label">Total Absent</div>
+                <div class="stat-label">Total Tidak Hadir</div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon hours"><i class="fas fa-business-time"></i></div>
                 <div class="stat-number">{{ number_format($totalWorkingHours, 1) }}</div>
-                <div class="stat-label">Total Working Hours</div>
+                <div class="stat-label">Total Jam Kerja</div>
             </div>
         </div>
 
         @if($reportByEmployee->count() > 0)
         <div class="card">
-            <h3><i class="fas fa-users"></i> Summary by Employee</h3>
+            <h3><i class="fas fa-users"></i> Ringkasan per Karyawan</h3>
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Employee</th>
-                        <th>Total Days</th>
-                        <th>Present</th>
-                        <th>Late</th>
-                        <th>Absent</th>
-                        <th>Attendance Rate</th>
+                        <th>Karyawan</th>
+                        <th>Total Hari</th>
+                        <th>Hadir</th>
+                        <th>Terlambat</th>
+                        <th>Tidak Hadir</th>
+                        <th>Tingkat Kehadiran</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -215,22 +215,22 @@
         @endif
 
         <div class="card">
-            <h3><i class="fas fa-list"></i> Detailed Attendance Records</h3>
+            <h3><i class="fas fa-list"></i> Rincian Data Kehadiran</h3>
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Date</th>
-                        <th>Employee</th>
-                        <th>Check In</th>
-                        <th>Check Out</th>
+                        <th>Tanggal</th>
+                        <th>Karyawan</th>
+                        <th>Jam Masuk</th>
+                        <th>Jam Keluar</th>
                         <th>Status</th>
-                        <th>Working Hours</th>
+                        <th>Jam Kerja</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($attendances as $attendance)
                     <tr>
-                        <td>{{ \Carbon\Carbon::parse($attendance->date)->format('M d, Y') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($attendance->date)->locale('id')->isoFormat('D MMMM Y') }}</td>
                         <td>
                             <strong>{{ $attendance->user->name }}</strong>
                             <br><small style="color: #64748b;">{{ $attendance->user->email }}</small>
@@ -251,7 +251,11 @@
                         </td>
                         <td>
                             <span class="status-badge status-{{ $attendance->status }}">
-                                {{ ucfirst($attendance->status) }}
+                                @if($attendance->status === 'present') Hadir
+                                @elseif($attendance->status === 'late') Terlambat
+                                @elseif($attendance->status === 'absent') Tidak Hadir
+                                @else {{ ucfirst($attendance->status) }}
+                                @endif
                             </span>
                         </td>
                         <td>
@@ -262,7 +266,7 @@
                                     $hours = $checkIn->diffInHours($checkOut);
                                     $minutes = $checkIn->diffInMinutes($checkOut) % 60;
                                 @endphp
-                                <strong>{{ $hours }}h {{ $minutes }}m</strong>
+                                <strong>{{ $hours }}j {{ $minutes }}m</strong>
                             @else
                                 <span style="color: #94a3b8;">-</span>
                             @endif
@@ -272,7 +276,7 @@
                     <tr>
                         <td colspan="6" style="text-align: center; color: #94a3b8; padding: 2rem;">
                             <i class="fas fa-inbox" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
-                            <br>No attendance records found for the selected period
+                            <br>Tidak ada data kehadiran untuk periode yang dipilih
                         </td>
                     </tr>
                     @endforelse
