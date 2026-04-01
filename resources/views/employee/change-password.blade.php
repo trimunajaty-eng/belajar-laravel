@@ -1,188 +1,201 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ubah Kata Sandi</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #334155; }
-        
-        .navbar { background: #ffffff; border-bottom: 1px solid #e2e8f0; padding: 1rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
-        .navbar h1 { font-size: 1.25rem; font-weight: 600; color: #1e293b; display: flex; align-items: center; }
-        .user-info { position: relative; display: flex; align-items: center; gap: 0.5rem; cursor: pointer; padding: 0.5rem; border-radius: 8px; transition: background 0.2s; }
-        .user-info:hover { background: #f8fafc; }
-        .user-avatar { width: 36px; height: 36px; border-radius: 8px; background: #16a34a; display: flex; align-items: center; justify-content: center; color: white; font-weight: 500; font-size: 0.875rem; }
-        .user-name { font-weight: 500; }
-        .chevron { transition: transform 0.3s; font-size: 0.75rem; color: #64748b; }
-        .chevron.rotate { transform: rotate(180deg); }
-        .dropdown-menu { position: absolute; top: 100%; right: 0; margin-top: 0.5rem; background: white; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); min-width: 200px; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s; }
-        .dropdown-menu.show { opacity: 1; visibility: visible; transform: translateY(0); }
-        .dropdown-menu form { margin: 0; }
-        .dropdown-item { width: 100%; padding: 0.75rem 1rem; border: none; background: none; text-align: left; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; color: #334155; font-size: 0.875rem; transition: background 0.2s; text-decoration: none; }
-        .dropdown-item:hover { background: #f8fafc; }
-        .dropdown-item i { color: #ef4444; }
-        .dropdown-item:first-child i { color: #3b82f6; }
-        
-        .container { max-width: 600px; margin: 2rem auto; padding: 1.5rem; }
-        .card { background: #ffffff; border: 1px solid #e2e8f0; padding: 2rem; border-radius: 12px; }
-        .card h2 { color: #1e293b; font-size: 1.25rem; font-weight: 600; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem; }
-        
-        .form-group { margin-bottom: 1.25rem; position: relative; }
-        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: #475569; font-size: 0.875rem; }
-        .form-control { width: 100%; padding: 0.625rem 0.875rem; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.875rem; transition: border 0.2s; }
-        .form-control:focus { outline: none; border-color: #16a34a; }
-        .password-wrapper { position: relative; }
-        .password-wrapper .form-control { padding-right: 2.5rem; }
-        .toggle-password { position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); cursor: pointer; color: #64748b; transition: color 0.2s; }
-        .toggle-password:hover { color: #16a34a; }
-        
-        .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: all 0.2s; }
-        .btn-primary { background: #16a34a; color: white; }
-        .btn-primary:hover { background: #15803d; }
-        .btn-secondary { background: #64748b; color: white; margin-left: 0.5rem; text-decoration: none; display: inline-block; }
-        .btn-secondary:hover { background: #475569; }
-        
-        .alert { padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 1rem; }
-        .alert-success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
-        .error { color: #dc2626; font-size: 0.75rem; margin-top: 0.25rem; }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            .navbar { padding: 0.75rem; }
-            .navbar h1 { font-size: 1rem; }
-            .navbar h1 i { font-size: 1rem; margin-right: 0.25rem; }
-            .user-name { display: none; }
-            .user-avatar { width: 32px; height: 32px; font-size: 0.75rem; }
-            .user-info { gap: 0.25rem; padding: 0.25rem; }
-            .dropdown-menu { min-width: 150px; }
-            
-            .container { padding: 1rem; }
-            .card { padding: 1rem; }
-            .card h2 { font-size: 1rem; }
-            .form-group { margin-bottom: 1rem; }
-            .form-group label { font-size: 0.75rem; }
-            .form-control { padding: 0.5rem 0.75rem; font-size: 0.75rem; }
-            .btn { padding: 0.625rem 1rem; font-size: 0.75rem; }
-        }
-        
-        @media (max-width: 480px) {
-            .navbar h1 { font-size: 0.875rem; }
-            .navbar h1 i { display: none; }
-        }
-    </style>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body>
-    <nav class="navbar">
-        <h1><i class="fas fa-user-clock" style="color: #16a34a; margin-right: 0.5rem;"></i>Employee Portal</h1>
-        <div class="user-info" onclick="toggleDropdown()">
-            <div class="user-avatar">{{ substr(Auth::user()->name, 0, 1) }}</div>
-            <span class="user-name">{{ Auth::user()->name }}</span>
-            <i class="fas fa-chevron-down chevron" id="chevron"></i>
-            <div class="dropdown-menu" id="dropdownMenu" onclick="event.stopPropagation()">
-                <a href="{{ route('employee.change-password') }}" class="dropdown-item">
-                    <i class="fas fa-cog" style="color: #3b82f6;"></i>
-                    <span>Pengaturan</span>
-                </a>
-                <a href="{{ route('employee.leave-requests.index') }}" class="dropdown-item">
-                    <i class="fas fa-file-medical-alt" style="color: #f59e0b;"></i>
-                    <span>Pengajuan</span>
-                </a>
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit" class="dropdown-item">
-                        <i class="fas fa-sign-out-alt"></i>
-                        <span>Keluar</span>
-                    </button>
-                </form>
+<body class="min-h-screen bg-slate-50 text-slate-700">
+
+    <nav class="sticky top-0 z-50 border-b border-slate-200/80 bg-white/90 backdrop-blur">
+        <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+            <h1 class="flex items-center text-lg font-semibold tracking-tight text-slate-900 sm:text-xl">
+                <span class="mr-3 flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-sm">
+                    <i class="fas fa-user-clock"></i>
+                </span>
+                Employee Portal
+            </h1>
+
+            <div class="relative flex items-center">
+                <div onclick="toggleDropdown()" class="flex cursor-pointer items-center gap-2 rounded-xl border border-transparent px-2 py-2 transition hover:border-slate-200 hover:bg-slate-50 sm:gap-3">
+                    <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-600 text-sm font-medium text-white">
+                        {{ substr(Auth::user()->name, 0, 1) }}
+                    </div>
+                    <span class="hidden text-sm font-medium text-slate-700 sm:inline">{{ Auth::user()->name }}</span>
+                    <i class="fas fa-chevron-down text-xs text-slate-400 transition-transform duration-300" id="chevron"></i>
+                </div>
+
+                <div id="dropdownMenu" class="invisible absolute right-0 top-full z-50 mt-3 w-52 translate-y-2 rounded-2xl border border-slate-200 bg-white p-2 opacity-0 shadow-xl transition-all duration-300">
+                    <a href="{{ route('dashboard') }}" class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-700 transition hover:bg-slate-50">
+                        <i class="fas fa-home text-emerald-500"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="{{ route('employee.change-password') }}" class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-blue-600 transition hover:bg-blue-50">
+                        <i class="fas fa-cog text-blue-500"></i>
+                        <span>Pengaturan</span>
+                    </a>
+                    <a href="{{ route('employee.leave-requests.index') }}" class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-700 transition hover:bg-slate-50">
+                        <i class="fas fa-file-medical-alt text-amber-500"></i>
+                        <span>Pengajuan</span>
+                    </a>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm text-slate-700 transition hover:bg-slate-50">
+                            <i class="fas fa-sign-out-alt text-red-500"></i>
+                            <span>Keluar</span>
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </nav>
 
-    <div class="container">
-        @if(session('success'))
-            <div class="alert alert-success">
-                <i class="fas fa-check-circle"></i> {{ session('success') }}
-            </div>
-        @endif
+    <main class="mx-auto max-w-3xl px-4 py-6 sm:px-6 lg:px-8">
 
-        <div class="card">
-            <h2><i class="fas fa-key"></i> Ubah Kata Sandi</h2>
-            
-            <form method="POST" action="{{ route('employee.change-password.update') }}">
+        {{-- Breadcrumb --}}
+        <div class="mb-6 flex items-center gap-2 text-sm text-slate-500">
+            <a href="{{ route('dashboard') }}" class="hover:text-emerald-600">Dashboard</a>
+            <i class="fas fa-chevron-right text-xs"></i>
+            <span class="text-slate-700">Ubah Kata Sandi</span>
+        </div>
+
+        {{-- Header --}}
+        <div class="mb-6 overflow-hidden rounded-3xl bg-gradient-to-r from-blue-900 via-blue-700 to-indigo-600 p-6 text-white shadow-xl">
+            <h2 class="text-xl font-bold tracking-tight sm:text-2xl">Ubah Kata Sandi</h2>
+            <p class="mt-1 text-sm text-slate-200">Perbarui kata sandi akun Anda secara berkala untuk keamanan.</p>
+        </div>
+
+        {{-- Card Form --}}
+        <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+
+            @if($errors->any())
+                <div class="mb-6 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                    <ul class="list-inside list-disc space-y-1">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <form method="POST" action="{{ route('employee.change-password.update') }}" class="space-y-5">
                 @csrf
-                
-                <div class="form-group">
-                    <label for="current_password">Kata Sandi Saat Ini</label>
-                    <div class="password-wrapper">
-                        <input type="password" id="current_password" name="current_password" class="form-control" required>
-                        <i class="fas fa-eye toggle-password" onclick="togglePassword('current_password', this)"></i>
+
+                {{-- Kata Sandi Saat Ini --}}
+                <div>
+                    <label for="current_password" class="mb-2 block text-sm font-medium text-slate-700">
+                        Kata Sandi Saat Ini
+                    </label>
+                    <div class="relative">
+                        <input type="password" id="current_password" name="current_password" required
+                            class="w-full rounded-xl border border-slate-200 px-4 py-3 pr-11 text-sm text-slate-700 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100">
+                        <button type="button" onclick="togglePassword('current_password', this)"
+                            class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-emerald-600">
+                            <i class="fas fa-eye"></i>
+                        </button>
                     </div>
                     @error('current_password')
-                        <div class="error">{{ $message }}</div>
+                        <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <div class="form-group">
-                    <label for="new_password">Kata Sandi Baru</label>
-                    <div class="password-wrapper">
-                        <input type="password" id="new_password" name="new_password" class="form-control" required>
-                        <i class="fas fa-eye toggle-password" onclick="togglePassword('new_password', this)"></i>
+                {{-- Kata Sandi Baru --}}
+                <div>
+                    <label for="new_password" class="mb-2 block text-sm font-medium text-slate-700">
+                        Kata Sandi Baru
+                    </label>
+                    <div class="relative">
+                        <input type="password" id="new_password" name="new_password" required
+                            class="w-full rounded-xl border border-slate-200 px-4 py-3 pr-11 text-sm text-slate-700 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100">
+                        <button type="button" onclick="togglePassword('new_password', this)"
+                            class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-emerald-600">
+                            <i class="fas fa-eye"></i>
+                        </button>
                     </div>
                     @error('new_password')
-                        <div class="error">{{ $message }}</div>
+                        <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <div class="form-group">
-                    <label for="new_password_confirmation">Konfirmasi Kata Sandi Baru</label>
-                    <div class="password-wrapper">
-                        <input type="password" id="new_password_confirmation" name="new_password_confirmation" class="form-control" required>
-                        <i class="fas fa-eye toggle-password" onclick="togglePassword('new_password_confirmation', this)"></i>
+                {{-- Konfirmasi Kata Sandi Baru --}}
+                <div>
+                    <label for="new_password_confirmation" class="mb-2 block text-sm font-medium text-slate-700">
+                        Konfirmasi Kata Sandi Baru
+                    </label>
+                    <div class="relative">
+                        <input type="password" id="new_password_confirmation" name="new_password_confirmation" required
+                            class="w-full rounded-xl border border-slate-200 px-4 py-3 pr-11 text-sm text-slate-700 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100">
+                        <button type="button" onclick="togglePassword('new_password_confirmation', this)"
+                            class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-emerald-600">
+                            <i class="fas fa-eye"></i>
+                        </button>
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save"></i> Perbarui Kata Sandi
-                </button>
-                <a href="{{ route('dashboard') }}" class="btn btn-secondary">
-                    <i class="fas fa-arrow-left"></i> Kembali ke Dashboard
-                </a>
+                {{-- Actions --}}
+                <div class="flex flex-col-reverse gap-3 pt-2 sm:flex-row sm:justify-end">
+                    <a href="{{ route('dashboard') }}"
+                        class="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-6 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50">
+                        <i class="fas fa-arrow-left"></i> Kembali
+                    </a>
+                    <button type="submit"
+                        class="inline-flex items-center justify-center gap-2 rounded-2xl bg-emerald-600 px-6 py-3 text-sm font-medium text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-emerald-700">
+                        <i class="fas fa-save"></i> Perbarui Kata Sandi
+                    </button>
+                </div>
             </form>
         </div>
+    </main>
+
+    {{-- Toast --}}
+    <div id="toast" class="fixed right-4 top-4 z-[9999] hidden max-w-[90%] items-center gap-3 rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-xl sm:right-8 sm:top-8">
+        <i class="fas fa-check-circle text-xl text-emerald-600"></i>
+        <span id="toast-message" class="text-sm text-slate-700"></span>
     </div>
 
     <script>
         function toggleDropdown() {
             const dropdown = document.getElementById('dropdownMenu');
             const chevron = document.getElementById('chevron');
-            dropdown.classList.toggle('show');
-            chevron.classList.toggle('rotate');
+            dropdown.classList.toggle('invisible');
+            dropdown.classList.toggle('opacity-0');
+            dropdown.classList.toggle('translate-y-2');
+            chevron.classList.toggle('rotate-180');
         }
 
-        document.addEventListener('click', function(event) {
-            const userInfo = document.querySelector('.user-info');
+        document.addEventListener('click', function(e) {
+            const nav = document.querySelector('.relative.flex.items-center');
             const dropdown = document.getElementById('dropdownMenu');
-            const chevron = document.getElementById('chevron');
-            if (!userInfo.contains(event.target)) {
-                dropdown.classList.remove('show');
-                chevron.classList.remove('rotate');
+            if (!nav.contains(e.target)) {
+                dropdown.classList.add('invisible', 'opacity-0', 'translate-y-2');
+                document.getElementById('chevron').classList.remove('rotate-180');
             }
         });
 
-        function togglePassword(inputId, icon) {
+        function togglePassword(inputId, btn) {
             const input = document.getElementById(inputId);
+            const icon = btn.querySelector('i');
             if (input.type === 'password') {
                 input.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
+                icon.classList.replace('fa-eye', 'fa-eye-slash');
             } else {
                 input.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
+                icon.classList.replace('fa-eye-slash', 'fa-eye');
             }
         }
     </script>
+
+    @if(session('success'))
+    <script>
+        const toast = document.getElementById('toast');
+        toast.querySelector('#toast-message').textContent = '{{ session('success') }}';
+        toast.classList.remove('hidden');
+        toast.classList.add('flex');
+        setTimeout(() => { toast.classList.replace('flex', 'hidden'); }, 4000);
+    </script>
+    @endif
+
 </body>
 </html>
