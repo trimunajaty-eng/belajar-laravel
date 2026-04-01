@@ -76,7 +76,7 @@ class DashboardController extends Controller
             ->where('date', $today)
             ->first();
             
-        $announcements = Announcement::where('is_active', true)
+        $announcements = Announcement::active()
             ->orderBy('created_at', 'desc')
             ->take(5)
             ->get();

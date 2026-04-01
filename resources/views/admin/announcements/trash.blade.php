@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Pengumuman</title>
+    <title>Sampah Pengumuman</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -31,34 +31,34 @@
         .sidebar i { width: 18px; text-align: center; font-size: 0.875rem; }
         .hamburger { display: none; background: none; border: none; font-size: 1.5rem; color: #1e293b; cursor: pointer; padding: 0.5rem; margin-right: 0.5rem; }
         .sidebar-overlay { display: none; position: fixed; top: 64px; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 998; }
-        .main-content { margin-left: 256px; margin-top: 64px; padding: 2rem; max-width: 1000px; transition: margin-left 0.3s ease; }
-        .card { background: #ffffff; border: 1px solid #e2e8f0; padding: 2rem; border-radius: 12px; }
-        .card h2 { font-size: 1.25rem; font-weight: 600; color: #1e293b; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem; }
-        .form-group { margin-bottom: 1.5rem; }
-        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: #374151; font-size: 0.875rem; }
-        .form-hint { font-size: 0.75rem; color: #94a3b8; margin-top: 0.25rem; }
-        .form-control { width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.875rem; }
-        .form-control:focus { outline: none; border-color: #dc2626; }
-        textarea.form-control { min-height: 120px; resize: vertical; }
-        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-        .field-error { color: #ef4444; font-size: 0.8rem; margin-top: 0.25rem; }
+        .main-content { margin-left: 256px; margin-top: 64px; padding: 2rem; transition: margin-left 0.3s ease; }
+        .card { background: #ffffff; border: 1px solid #e2e8f0; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.75rem; }
+        .header h2 { font-size: 1.125rem; font-weight: 600; color: #1e293b; display: flex; align-items: center; gap: 0.5rem; }
         .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; font-size: 0.875rem; font-weight: 500; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; }
-        .btn-primary { background: #dc2626; color: white; }
-        .btn-primary:hover { background: #b91c1c; }
         .btn-secondary { background: #64748b; color: white; }
         .btn-secondary:hover { background: #475569; }
-        .form-actions { display: flex; gap: 1rem; margin-top: 2rem; }
-        .expired-notice { background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 1.5rem; color: #991b1b; font-size: 0.875rem; display: flex; align-items: center; gap: 0.5rem; }
+        .btn-sm { padding: 0.4rem 0.875rem; font-size: 0.75rem; }
+        .btn-restore { background: #10b981; color: white; }
+        .btn-restore:hover { background: #059669; }
+        .btn-danger { background: #ef4444; color: white; }
+        .btn-danger:hover { background: #dc2626; }
+        .alert { padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 1rem; }
+        .alert-success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+        .trash-card { background: #fef9f9; border: 1px solid #fecaca; padding: 1.25rem; border-radius: 8px; margin-bottom: 1rem; opacity: 0.85; }
+        .trash-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem; }
+        .trash-title { font-size: 1rem; font-weight: 600; color: #1e293b; }
+        .trash-meta { font-size: 0.8rem; color: #94a3b8; margin-bottom: 0.75rem; display: flex; flex-wrap: wrap; gap: 1rem; }
+        .trash-content { color: #64748b; font-size: 0.875rem; margin-bottom: 0.75rem; }
+        .trash-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
         @media (max-width: 768px) {
             .hamburger { display: block; }
             .user-name { display: none; }
             .sidebar { transform: translateX(-100%); }
             .sidebar.active { transform: translateX(0); box-shadow: 2px 0 8px rgba(0,0,0,0.1); }
             .sidebar-overlay.active { display: block; }
-            .main-content { margin-left: 0; padding: 1rem; max-width: 100%; }
+            .main-content { margin-left: 0; padding: 1rem; }
             .card { padding: 1rem; }
-            .form-row { grid-template-columns: 1fr; }
-            .form-actions { flex-direction: column; }
         }
     </style>
 </head>
@@ -93,64 +93,51 @@
     </div>
 
     <div class="main-content">
+        @if(session('success'))
+            <div class="alert alert-success"><i class="fas fa-check-circle"></i> {{ session('success') }}</div>
+        @endif
+
         <div class="card">
-            <h2><i class="fas fa-edit"></i> Edit Pengumuman</h2>
+            <div class="header">
+                <h2><i class="fas fa-trash-alt"></i> Sampah Pengumuman</h2>
+                <a href="{{ route('announcements.index') }}" class="btn btn-secondary btn-sm">
+                    <i class="fas fa-arrow-left"></i> Kembali
+                </a>
+            </div>
 
-            @if($announcement->isExpired())
-                <div class="expired-notice">
-                    <i class="fas fa-exclamation-circle"></i>
-                    Pengumuman ini sudah kedaluwarsa sejak {{ $announcement->expired_at->locale('id')->isoFormat('D MMMM Y HH:mm') }}.
-                    Perbarui batas waktu untuk mengaktifkannya kembali.
-                </div>
-            @endif
-
-            <form method="POST" action="{{ route('announcements.update', $announcement->id) }}">
-                @csrf @method('PUT')
-
-                <div class="form-group">
-                    <label for="title">Judul</label>
-                    <input type="text" id="title" name="title" class="form-control" value="{{ old('title', $announcement->title) }}" required>
-                    @error('title') <div class="field-error">{{ $message }}</div> @enderror
-                </div>
-
-                <div class="form-group">
-                    <label for="type">Jenis</label>
-                    <select id="type" name="type" class="form-control" required>
-                        <option value="general" {{ old('type', $announcement->type) === 'general' ? 'selected' : '' }}>Umum</option>
-                        <option value="meeting" {{ old('type', $announcement->type) === 'meeting' ? 'selected' : '' }}>Rapat</option>
-                        <option value="urgent" {{ old('type', $announcement->type) === 'urgent' ? 'selected' : '' }}>Mendesak</option>
-                    </select>
-                    @error('type') <div class="field-error">{{ $message }}</div> @enderror
-                </div>
-
-                <div class="form-group">
-                    <label for="content">Isi Pengumuman</label>
-                    <textarea id="content" name="content" class="form-control" required>{{ old('content', $announcement->content) }}</textarea>
-                    @error('content') <div class="field-error">{{ $message }}</div> @enderror
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="meeting_date">Tanggal Rapat (Opsional)</label>
-                        <input type="datetime-local" id="meeting_date" name="meeting_date" class="form-control"
-                            value="{{ old('meeting_date', $announcement->meeting_date?->format('Y-m-d\TH:i')) }}">
-                        @error('meeting_date') <div class="field-error">{{ $message }}</div> @enderror
+            @forelse($trashed as $announcement)
+                <div class="trash-card">
+                    <div class="trash-header">
+                        <div class="trash-title">{{ $announcement->title }}</div>
                     </div>
-
-                    <div class="form-group">
-                        <label for="expired_at">Batas Waktu Pengumuman (Opsional)</label>
-                        <input type="datetime-local" id="expired_at" name="expired_at" class="form-control"
-                            value="{{ old('expired_at', $announcement->expired_at?->format('Y-m-d\TH:i')) }}">
-                        <div class="form-hint"><i class="fas fa-info-circle"></i> Kosongkan untuk pengumuman tanpa batas waktu.</div>
-                        @error('expired_at') <div class="field-error">{{ $message }}</div> @enderror
+                    <div class="trash-meta">
+                        <span><i class="fas fa-trash"></i> Dihapus: {{ $announcement->deleted_at->locale('id')->isoFormat('D MMMM Y HH:mm') }}</span>
+                        @if($announcement->expired_at)
+                            <span><i class="fas fa-hourglass-end"></i> Kedaluwarsa: {{ $announcement->expired_at->locale('id')->isoFormat('D MMMM Y HH:mm') }}</span>
+                        @endif
+                    </div>
+                    <div class="trash-content">{{ Str::limit($announcement->content, 120) }}</div>
+                    <div class="trash-actions">
+                        <form method="POST" action="{{ route('announcements.restore', $announcement->id) }}" style="display:inline;">
+                            @csrf
+                            <button type="submit" class="btn btn-sm btn-restore">
+                                <i class="fas fa-undo"></i> Pulihkan
+                            </button>
+                        </form>
+                        <form method="POST" action="{{ route('announcements.force-delete', $announcement->id) }}" style="display:inline;">
+                            @csrf @method('DELETE')
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Hapus permanen? Tindakan ini tidak dapat dibatalkan.')">
+                                <i class="fas fa-times"></i> Hapus Permanen
+                            </button>
+                        </form>
                     </div>
                 </div>
-
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Simpan Perubahan</button>
-                    <a href="{{ route('announcements.index') }}" class="btn btn-secondary"><i class="fas fa-times"></i> Batal</a>
+            @empty
+                <div style="text-align:center; padding:3rem; color:#94a3b8;">
+                    <i class="fas fa-trash-alt" style="font-size:3rem; margin-bottom:1rem; opacity:0.3;"></i>
+                    <p>Sampah kosong.</p>
                 </div>
-            </form>
+            @endforelse
         </div>
     </div>
 

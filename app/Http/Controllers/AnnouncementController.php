@@ -21,15 +21,16 @@ class AnnouncementController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
-            'type' => 'required|in:general,meeting,urgent',
+            'title'      => 'required|string|max:255',
+            'content'    => 'required|string',
+            'type'       => 'required|in:general,meeting,urgent',
             'meeting_date' => 'nullable|date',
+            'expired_at' => 'nullable|date|after:now',
         ]);
 
-        Announcement::create($request->all());
+        Announcement::create($request->only('title', 'content', 'type', 'meeting_date', 'expired_at', 'is_active'));
 
-        return redirect()->route('announcements.index')->with('success', 'Announcement created successfully!');
+        return redirect()->route('announcements.index')->with('success', 'Pengumuman berhasil dibuat!');
     }
 
     public function edit($id)
@@ -41,21 +42,40 @@ class AnnouncementController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
-            'type' => 'required|in:general,meeting,urgent',
+            'title'      => 'required|string|max:255',
+            'content'    => 'required|string',
+            'type'       => 'required|in:general,meeting,urgent',
             'meeting_date' => 'nullable|date',
+            'expired_at' => 'nullable|date',
         ]);
 
         $announcement = Announcement::findOrFail($id);
-        $announcement->update($request->all());
+        $announcement->update($request->only('title', 'content', 'type', 'meeting_date', 'expired_at', 'is_active'));
 
-        return redirect()->route('announcements.index')->with('success', 'Announcement updated successfully!');
+        return redirect()->route('announcements.index')->with('success', 'Pengumuman berhasil diperbarui!');
     }
 
     public function destroy($id)
     {
-        Announcement::destroy($id);
-        return redirect()->route('announcements.index')->with('success', 'Announcement deleted successfully!');
+        Announcement::findOrFail($id)->delete(); // soft delete → ke trash
+        return redirect()->route('announcements.index')->with('success', 'Pengumuman dipindahkan ke sampah.');
+    }
+
+    public function trash()
+    {
+        $trashed = Announcement::onlyTrashed()->latest('deleted_at')->get();
+        return view('admin.announcements.trash', compact('trashed'));
+    }
+
+    public function restore($id)
+    {
+        Announcement::onlyTrashed()->findOrFail($id)->restore();
+        return redirect()->route('announcements.trash')->with('success', 'Pengumuman berhasil dipulihkan.');
+    }
+
+    public function forceDelete($id)
+    {
+        Announcement::onlyTrashed()->findOrFail($id)->forceDelete();
+        return redirect()->route('announcements.trash')->with('success', 'Pengumuman dihapus permanen.');
     }
 }

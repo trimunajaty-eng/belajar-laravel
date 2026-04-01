@@ -40,6 +40,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/work-settings', [WorkSettingController::class, 'index'])->name('work-settings.index');
         Route::post('/work-settings', [WorkSettingController::class, 'store'])->name('work-settings.store');
         Route::resource('announcements', AnnouncementController::class);
+        Route::get('/announcements-trash', [AnnouncementController::class, 'trash'])->name('announcements.trash');
+        Route::post('/announcements-trash/{id}/restore', [AnnouncementController::class, 'restore'])->name('announcements.restore');
+        Route::delete('/announcements-trash/{id}/force-delete', [AnnouncementController::class, 'forceDelete'])->name('announcements.force-delete');
         Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
         Route::get('/reports/export', [ReportController::class, 'export'])->name('reports.export');
         Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
