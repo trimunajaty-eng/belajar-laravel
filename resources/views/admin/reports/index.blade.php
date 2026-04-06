@@ -9,8 +9,9 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: #f8fafc; color: #334155; line-height: 1.6; }
         
-        .navbar { background: #ffffff; border-bottom: 1px solid #e2e8f0; padding: 1rem 2rem; position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; height: 64px; }
-        .navbar h1 { font-size: 1.5rem; color: #1e293b; font-weight: 600; }
+        .navbar { background: #ffffff; border-bottom: 1px solid #e2e8f0; padding: 1rem; position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; justify-content: space-between; align-items: center; height: 64px; }
+        .navbar h1 { font-size: 1.25rem; color: #1e293b; font-weight: 600; display: flex; align-items: center; }
+        .hamburger { display: none; background: none; border: none; font-size: 1.5rem; color: #1e293b; cursor: pointer; padding: 0.5rem; margin-right: 0.5rem; }
         .user-info { position: relative; display: flex; align-items: center; gap: 0.5rem; cursor: pointer; padding: 0.5rem; border-radius: 8px; transition: background 0.2s; }
         .user-info:hover { background: #f8fafc; }
         .user-avatar { width: 36px; height: 36px; border-radius: 8px; background: #dc2626; color: white; display: flex; align-items: center; justify-content: center; font-weight: 500; font-size: 0.875rem; }
@@ -23,15 +24,16 @@
         .dropdown-item { width: 100%; padding: 0.75rem 1rem; border: none; background: none; text-align: left; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; color: #334155; font-size: 0.875rem; transition: background 0.2s; text-decoration: none; }
         .dropdown-item:hover { background: #f8fafc; }
         .dropdown-item i { color: #ef4444; }
-        
-        .sidebar { position: fixed; left: 0; top: 64px; bottom: 0; width: 256px; background: #ffffff; border-right: 1px solid #e2e8f0; padding: 1.5rem 0; overflow-y: auto; }
+
+        .sidebar { position: fixed; left: 0; top: 64px; width: 256px; height: calc(100vh - 64px); background: #ffffff; border-right: 1px solid #e2e8f0; padding: 1.5rem 0; overflow-y: auto; transition: transform 0.3s ease; z-index: 999; }
         .sidebar ul { list-style: none; padding: 0 1rem; }
         .sidebar li { margin-bottom: 0.25rem; }
         .sidebar a { text-decoration: none; color: #64748b; display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; border-radius: 8px; transition: all 0.2s; font-size: 0.875rem; font-weight: 500; }
         .sidebar a:hover { background: #f1f5f9; color: #475569; }
         .sidebar a.active { background: #dc2626; color: white; }
         .sidebar i { width: 18px; text-align: center; font-size: 0.875rem; }
-        
+        .sidebar-overlay { display: none; position: fixed; top: 64px; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 998; }
+
         .main-content { margin-left: 256px; margin-top: 64px; padding: 2rem; }
         .welcome-card { background: #ffffff; border: 1px solid #e2e8f0; padding: 2rem; border-radius: 12px; margin-bottom: 2rem; }
         .welcome-card h2 { color: #1e293b; font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem; }
@@ -39,6 +41,7 @@
         
         .filter-card { background: #ffffff; border: 1px solid #e2e8f0; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; }
         .filter-form { display: grid; grid-template-columns: 1fr 1fr 1.5fr auto auto; gap: 1rem; align-items: end; }
+        .filter-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
         .form-group { display: flex; flex-direction: column; }
         .form-group label { font-size: 0.875rem; color: #475569; margin-bottom: 0.5rem; font-weight: 500; }
         .form-group input, .form-group select { padding: 0.625rem 0.75rem; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.875rem; color: #1e293b; background: #ffffff; transition: border-color 0.2s; }
@@ -63,8 +66,9 @@
         .card { background: #ffffff; border: 1px solid #e2e8f0; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; }
         .card h3 { color: #1e293b; margin-bottom: 1.5rem; font-size: 1.125rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; }
         
-        .table { width: 100%; border-collapse: collapse; }
-        .table th, .table td { padding: 0.75rem; text-align: left; border-bottom: 1px solid #f1f5f9; }
+        .table-wrapper { overflow-x: auto; }
+        .table { width: 100%; border-collapse: collapse; min-width: 600px; }
+        .table th, .table td { padding: 0.75rem; text-align: left; border-bottom: 1px solid #f1f5f9; white-space: nowrap; }
         .table th { background: #f8fafc; font-weight: 600; color: #475569; font-size: 0.875rem; }
         .table td { font-size: 0.875rem; color: #1e293b; }
         .table tbody tr:hover { background: #f8fafc; }
@@ -78,10 +82,40 @@
         .progress-fill { height: 100%; background: #16a34a; transition: width 0.3s; border-radius: 4px; }
         .progress-fill.warning { background: #d97706; }
         .progress-fill.danger { background: #ef4444; }
+
+        @media (max-width: 1024px) {
+            .stats { grid-template-columns: repeat(2, 1fr); }
+            .filter-form { grid-template-columns: 1fr 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .hamburger { display: block; }
+            .user-name { display: none; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); box-shadow: 2px 0 8px rgba(0,0,0,0.1); }
+            .sidebar-overlay.active { display: block; }
+            .main-content { margin-left: 0; padding: 1rem; }
+            .welcome-card { padding: 1rem; margin-bottom: 1rem; }
+            .welcome-card h2 { font-size: 1.125rem; }
+            .filter-card { padding: 1rem; margin-bottom: 1rem; }
+            .filter-form { grid-template-columns: 1fr 1fr; }
+            .stats { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-bottom: 1rem; }
+            .stat-card { padding: 1rem; }
+            .stat-number { font-size: 1.5rem; }
+            .card { padding: 1rem; margin-bottom: 1rem; }
+        }
+
+        @media (max-width: 480px) {
+            .filter-form { grid-template-columns: 1fr; }
+            .stats { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+            .stat-number { font-size: 1.25rem; }
+            .stat-label { font-size: 0.75rem; }
+        }
     </style>
 </head>
 <body>
     <nav class="navbar">
+        <button class="hamburger" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
         <h1><i class="fas fa-chart-line" style="color: #dc2626; margin-right: 0.5rem;"></i>Admin Dashboard</h1>
         <div class="user-info" onclick="toggleDropdown()">
             <div class="user-avatar">{{ substr(Auth::user()->name, 0, 1) }}</div>
@@ -99,7 +133,8 @@
         </div>
     </nav>
 
-    <div class="sidebar">
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+    <div class="sidebar" id="sidebar">
         <ul>
             <li><a href="{{ route('dashboard') }}"><i class="fas fa-home"></i> Dashboard</a></li>
             <li><a href="{{ route('users.index') }}"><i class="fas fa-users"></i> Users</a></li>
@@ -177,6 +212,7 @@
         @if($reportByEmployee->count() > 0)
         <div class="card">
             <h3><i class="fas fa-users"></i> Ringkasan per Karyawan</h3>
+            <div class="table-wrapper">
             <table class="table">
                 <thead>
                     <tr>
@@ -212,11 +248,13 @@
                     @endforeach
                 </tbody>
             </table>
+            </div>
         </div>
         @endif
 
         <div class="card">
             <h3><i class="fas fa-list"></i> Rincian Data Kehadiran</h3>
+            <div class="table-wrapper">
             <table class="table">
                 <thead>
                     <tr>
@@ -283,10 +321,16 @@
                     @endforelse
                 </tbody>
             </table>
+            </div>
         </div>
     </div>
 
     <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.querySelector('.sidebar-overlay').classList.toggle('active');
+        }
+
         function toggleDropdown() {
             const dropdown = document.getElementById('dropdownMenu');
             const chevron = document.getElementById('chevron');
@@ -294,12 +338,10 @@
             chevron.classList.toggle('rotate');
         }
 
-        // Close dropdown when clicking outside
         document.addEventListener('click', function(event) {
             const userInfo = document.querySelector('.user-info');
             const dropdown = document.getElementById('dropdownMenu');
             const chevron = document.getElementById('chevron');
-            
             if (!userInfo.contains(event.target)) {
                 dropdown.classList.remove('show');
                 chevron.classList.remove('rotate');
