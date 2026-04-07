@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Management</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: #f8fafc; color: #334155; line-height: 1.6; }
-        
         .navbar { background: #ffffff; border-bottom: 1px solid #e2e8f0; padding: 1rem; display: flex; justify-content: space-between; align-items: center; position: fixed; top: 0; left: 0; right: 0; z-index: 1000; height: 64px; }
         .navbar h1 { font-size: 1.25rem; font-weight: 600; color: #1e293b; display: flex; align-items: center; }
         .user-info { position: relative; display: flex; align-items: center; gap: 0.5rem; cursor: pointer; padding: 0.5rem; border-radius: 8px; transition: background 0.2s; }
@@ -23,7 +23,6 @@
         .dropdown-item { width: 100%; padding: 0.75rem 1rem; border: none; background: none; text-align: left; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; color: #334155; font-size: 0.875rem; transition: background 0.2s; text-decoration: none; }
         .dropdown-item:hover { background: #f8fafc; }
         .dropdown-item i { color: #ef4444; }
-        
         .sidebar { position: fixed; left: 0; top: 64px; width: 256px; height: calc(100vh - 64px); background: #ffffff; border-right: 1px solid #e2e8f0; padding: 1.5rem 0; overflow-y: auto; transition: transform 0.3s ease; z-index: 999; }
         .sidebar ul { list-style: none; padding: 0 1rem; }
         .sidebar li { margin-bottom: 0.25rem; }
@@ -31,67 +30,29 @@
         .sidebar a:hover { background: #f1f5f9; color: #475569; }
         .sidebar a.active { background: #dc2626; color: white; }
         .sidebar i { width: 18px; text-align: center; font-size: 0.875rem; }
-        
         .hamburger { display: none; background: none; border: none; font-size: 1.5rem; color: #1e293b; cursor: pointer; padding: 0.5rem; margin-right: 0.5rem; }
         .sidebar-overlay { display: none; position: fixed; top: 64px; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 998; }
-        
         .main-content { margin-left: 256px; margin-top: 64px; padding: 2rem; transition: margin-left 0.3s ease; }
-        .btn { padding: 0.5rem 1rem; border-radius: 6px; text-decoration: none; font-size: 0.875rem; font-weight: 500; cursor: pointer; border: none; transition: all 0.2s; }
-        .btn-primary { background: #3b82f6; color: white; }
-        .btn-primary:hover { background: #2563eb; }
-        .btn-success { background: #16a34a; color: white; }
-        .btn-danger { background: #ef4444; color: white; }
-        .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.5rem; }
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-        .card-header h2 { color: #1e293b; font-size: 1.25rem; font-weight: 600; }
-        .table { width: 100%; border-collapse: collapse; }
-        .table th, .table td { padding: 0.75rem; text-align: left; border-bottom: 1px solid #f1f5f9; }
-        .table th { background: #f8fafc; font-weight: 600; color: #475569; font-size: 0.875rem; }
-        .table td { font-size: 0.875rem; }
-        .actions { display: flex; gap: 0.5rem; }
         .alert { padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 1rem; }
         .alert-success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
-        
-        .table-wrapper { overflow-x: auto; }
-        .table { width: 100%; border-collapse: collapse; min-width: 600px; }
-        
-        /* Responsive */
         @media (max-width: 768px) {
-            .navbar { padding: 0.75rem; }
-            .navbar h1 { font-size: 1rem; }
-            .navbar h1 i { font-size: 1rem; margin-right: 0.25rem; }
             .hamburger { display: block; }
             .user-name { display: none; }
-            .user-avatar { width: 32px; height: 32px; font-size: 0.75rem; }
-            .logout-btn { padding: 0.5rem 0.75rem; font-size: 0.75rem; }
-            .logout-btn span { display: none; }
-            
             .sidebar { transform: translateX(-100%); }
             .sidebar.active { transform: translateX(0); box-shadow: 2px 0 8px rgba(0,0,0,0.1); }
             .sidebar-overlay.active { display: block; }
-            
             .main-content { margin-left: 0; padding: 1rem; }
-            
-            .card { padding: 1rem; }
-            .card-header h2 { font-size: 1rem; }
-            .btn { padding: 0.5rem 0.75rem; font-size: 0.75rem; }
-            .table th, .table td { padding: 0.5rem 0.25rem; font-size: 0.75rem; }
-            .actions { flex-wrap: wrap; gap: 0.25rem; }
         }
-        
         @media (max-width: 480px) {
             .navbar h1 { font-size: 0.875rem; }
             .navbar h1 i { display: none; }
-            .card-header { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
-            .table { min-width: 500px; }
         }
     </style>
 </head>
 <body>
+
     <nav class="navbar">
-        <button class="hamburger" onclick="toggleSidebar()">
-            <i class="fas fa-bars"></i>
-        </button>
+        <button class="hamburger" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
         <h1><i class="fas fa-chart-line" style="color: #dc2626; margin-right: 0.5rem;"></i>Admin Dashboard</h1>
         <div class="user-info" onclick="toggleDropdown()">
             <div class="user-avatar">{{ substr(Auth::user()->name, 0, 1) }}</div>
@@ -101,8 +62,7 @@
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit" class="dropdown-item">
-                        <i class="fas fa-sign-out-alt"></i>
-                        <span>Logout</span>
+                        <i class="fas fa-sign-out-alt"></i><span>Logout</span>
                     </button>
                 </form>
             </div>
@@ -123,103 +83,172 @@
     </div>
 
     <div class="main-content">
+
         @if(session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
+            <div class="alert alert-success"><i class="fas fa-check-circle"></i> {{ session('success') }}</div>
         @endif
 
-        <div class="card">
-            <div class="card-header">
-                <h2><i class="fas fa-users"></i> User Management</h2>
-                <a href="{{ route('users.create') }}" class="btn btn-primary">
-                    <i class="fas fa-plus"></i>
-                </a>
+        {{-- Card --}}
+        <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+
+            {{-- Card Header --}}
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-6 py-4 border-b border-slate-100">
+                <div>
+                    <h2 class="text-base font-semibold text-slate-800">
+                        <i class="fas fa-users mr-2 text-slate-400"></i>User Management
+                    </h2>
+                    <p class="text-xs text-slate-400 mt-0.5">Manage system users and their access</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    {{-- Search --}}
+                    <div class="relative">
+                        <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none"></i>
+                        <input type="text" id="searchInput" placeholder="Search users…"
+                               class="pl-8 pr-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg w-44 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-400 transition-all placeholder-slate-400">
+                    </div>
+                    {{-- Create Button --}}
+                    <a href="{{ route('users.create') }}"
+                       class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm">
+                        <i class="fas fa-plus text-xs"></i>
+                        <span class="hidden sm:inline">Create User</span>
+                    </a>
+                </div>
             </div>
 
-            <div class="table-wrapper">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Status</th>
-                        <th>Created At</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($users as $user)
-                    <tr>
-                        <td>{{ $user->name }}</td>
-                        <td>{{ $user->email }}</td>
-                        <td>
-                            @if($user->is_active)
-                                <span style="background: #dcfce7; color: #166534; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 500;">Active</span>
-                            @else
-                                <span style="background: #fee2e2; color: #991b1b; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 500;">Inactive</span>
-                            @endif
-                        </td>
-                        <td>{{ $user->created_at->format('M d, Y') }}</td>
-                        <td>
-                            <div class="actions">
-                                <form method="POST" action="{{ route('users.toggle-status', $user) }}" style="display: inline;">
-                                    @csrf
-                                    @if($user->is_active)
-                                        <button type="submit" class="btn" style="background: #f59e0b; color: white;">
-                                            <i class="fas fa-ban"></i>
+            {{-- Table --}}
+            <div class="overflow-x-auto">
+                <table class="w-full min-w-[600px]" id="usersTable">
+                    <thead>
+                        <tr class="bg-slate-50 border-b border-slate-100">
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Name</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Email</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Created</th>
+                            <th class="px-6 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        @forelse($users as $user)
+                        <tr class="hover:bg-slate-50/60 transition-colors"
+                            data-name="{{ strtolower($user->name) }}"
+                            data-email="{{ strtolower($user->email) }}">
+
+                            {{-- Name --}}
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xs font-semibold flex-shrink-0">
+                                        {{ strtoupper(substr($user->name, 0, 1)) }}
+                                    </div>
+                                    <span class="text-sm font-medium text-slate-800">{{ $user->name }}</span>
+                                </div>
+                            </td>
+
+                            {{-- Email --}}
+                            <td class="px-6 py-4 text-sm text-slate-500">{{ $user->email }}</td>
+
+                            {{-- Status Badge --}}
+                            <td class="px-6 py-4">
+                                @if($user->is_active)
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-700">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                        Active
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-500/10 text-slate-600">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                                        Inactive
+                                    </span>
+                                @endif
+                            </td>
+
+                            {{-- Created At --}}
+                            <td class="px-6 py-4 text-sm text-slate-400">{{ $user->created_at->format('M d, Y') }}</td>
+
+                            {{-- Actions --}}
+                            <td class="px-6 py-4">
+                                <div class="flex items-center justify-end gap-1">
+
+                                    {{-- Toggle Status --}}
+                                    <form method="POST" action="{{ route('users.toggle-status', $user) }}">
+                                        @csrf
+                                        @if($user->is_active)
+                                            <button type="submit" title="Deactivate"
+                                                    class="p-2 rounded-lg text-slate-400 hover:text-amber-600 hover:bg-amber-50 transition-colors">
+                                                <i class="fas fa-ban text-sm"></i>
+                                            </button>
+                                        @else
+                                            <button type="submit" title="Activate"
+                                                    class="p-2 rounded-lg text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 transition-colors">
+                                                <i class="fas fa-check-circle text-sm"></i>
+                                            </button>
+                                        @endif
+                                    </form>
+
+                                    {{-- Edit --}}
+                                    <a href="{{ route('users.edit', $user) }}" title="Edit"
+                                       class="p-2 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors">
+                                        <i class="fas fa-pencil-alt text-sm"></i>
+                                    </a>
+
+                                    {{-- Delete --}}
+                                    <form method="POST" action="{{ route('users.destroy', $user) }}"
+                                          onsubmit="return confirm('Delete {{ addslashes($user->name) }}? This cannot be undone.')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" title="Delete"
+                                                class="p-2 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors">
+                                            <i class="fas fa-trash-alt text-sm"></i>
                                         </button>
-                                    @else
-                                        <button type="submit" class="btn" style="background: #10b981; color: white;">
-                                            <i class="fas fa-check-circle"></i>
-                                        </button>
-                                    @endif
-                                </form>
-                                <a href="{{ route('users.edit', $user) }}" class="btn btn-success">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <form method="POST" action="{{ route('users.destroy', $user) }}" style="display: inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                                    </form>
+
+                                </div>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="5" class="px-6 py-16 text-center">
+                                <div class="flex flex-col items-center gap-2 text-slate-400">
+                                    <i class="fas fa-users text-3xl"></i>
+                                    <p class="text-sm font-medium">No users found</p>
+                                </div>
+                            </td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
 
-            <div style="margin-top: 1rem;">
+            {{-- Pagination --}}
+            @if($users->hasPages())
+            <div class="px-6 py-4 border-t border-slate-100">
                 {{ $users->links() }}
             </div>
+            @endif
+
         </div>
     </div>
 
     <script>
         function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.querySelector('.sidebar-overlay');
-            sidebar.classList.toggle('active');
-            overlay.classList.toggle('active');
+            document.getElementById('sidebar').classList.toggle('active');
+            document.querySelector('.sidebar-overlay').classList.toggle('active');
         }
-
         function toggleDropdown() {
-            const dropdown = document.getElementById('dropdownMenu');
-            const chevron = document.getElementById('chevron');
-            dropdown.classList.toggle('show');
-            chevron.classList.toggle('rotate');
+            document.getElementById('dropdownMenu').classList.toggle('show');
+            document.getElementById('chevron').classList.toggle('rotate');
         }
-
-        document.addEventListener('click', function(event) {
-            const userInfo = document.querySelector('.user-info');
-            const dropdown = document.getElementById('dropdownMenu');
-            const chevron = document.getElementById('chevron');
-            if (!userInfo.contains(event.target)) {
-                dropdown.classList.remove('show');
-                chevron.classList.remove('rotate');
+        document.addEventListener('click', function(e) {
+            const ui = document.querySelector('.user-info');
+            if (!ui.contains(e.target)) {
+                document.getElementById('dropdownMenu').classList.remove('show');
+                document.getElementById('chevron').classList.remove('rotate');
             }
+        });
+        document.getElementById('searchInput').addEventListener('input', function () {
+            const q = this.value.toLowerCase();
+            document.querySelectorAll('#usersTable tbody tr[data-name]').forEach(row => {
+                row.style.display = (row.dataset.name.includes(q) || row.dataset.email.includes(q)) ? '' : 'none';
+            });
         });
     </script>
 </body>
