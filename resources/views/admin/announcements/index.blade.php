@@ -201,16 +201,16 @@
                         <div class="mt-4 flex items-center gap-2">
                             <a href="{{ route('announcements.edit', $announcement->id) }}"
                                class="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-blue-700">
-                                <i class="fas fa-edit"></i> 
+                                <i class="fas fa-edit"></i> Edit
                             </a>
-                            <form method="POST" action="{{ route('announcements.destroy', $announcement->id) }}">
+                            <form id="delete-form-{{ $announcement->id }}" method="POST" action="{{ route('announcements.destroy', $announcement->id) }}">
                                 @csrf @method('DELETE')
-                                <button type="submit"
-                                    onclick="return confirm('Pindahkan ke sampah?')"
-                                    class="inline-flex items-center gap-1.5 rounded-lg bg-red-50 px-3 py-1.5 text-xs font-medium text-red-600 transition hover:bg-red-100">
-                                    <i class="fas fa-trash"></i> 
-                                </button>
                             </form>
+                            <button type="button"
+                                onclick="openDeleteModal({{ $announcement->id }}, '{{ addslashes($announcement->title) }}')"
+                                class="inline-flex items-center gap-1.5 rounded-lg bg-red-50 px-3 py-1.5 text-xs font-medium text-red-600 transition hover:bg-red-100">
+                                <i class="fas fa-trash"></i> Hapus
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -230,6 +230,27 @@
         </div>
     </div>
 
+    {{-- Delete Modal --}}
+    <div id="deleteModal" class="fixed inset-0 z-[2000] hidden items-center justify-center p-4 backdrop-blur-sm" style="background:rgba(0,0,0,0.4);">
+        <div class="w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl">
+            <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
+                <i class="fas fa-trash text-red-600"></i>
+            </div>
+            <h3 class="text-base font-semibold text-slate-800">Hapus Pengumuman?</h3>
+            <p class="mt-1 text-sm text-slate-500">Pengumuman <span id="deleteTitle" class="font-medium text-slate-700"></span> akan dipindahkan ke sampah.</p>
+            <div class="mt-5 flex justify-end gap-2">
+                <button onclick="closeDeleteModal()"
+                    class="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
+                    Batal
+                </button>
+                <button onclick="submitDelete()"
+                    class="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700">
+                    <i class="fas fa-trash mr-1"></i> Ya, Hapus
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('active');
@@ -245,6 +266,33 @@
                 document.getElementById('dropdownMenu').classList.remove('show');
                 document.getElementById('chevron').classList.remove('rotate');
             }
+        });
+
+        let deleteTargetId = null;
+
+        function openDeleteModal(id, title) {
+            deleteTargetId = id;
+            document.getElementById('deleteTitle').textContent = '"' + title + '"';
+            const modal = document.getElementById('deleteModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeDeleteModal() {
+            deleteTargetId = null;
+            const modal = document.getElementById('deleteModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function submitDelete() {
+            if (deleteTargetId) {
+                document.getElementById('delete-form-' + deleteTargetId).submit();
+            }
+        }
+
+        document.getElementById('deleteModal').addEventListener('click', function(e) {
+            if (e.target === this) closeDeleteModal();
         });
     </script>
 </body>
