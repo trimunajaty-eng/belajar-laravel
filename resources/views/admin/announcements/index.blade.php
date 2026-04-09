@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pengumuman</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: #f8fafc; color: #334155; line-height: 1.6; }
@@ -32,37 +33,6 @@
         .hamburger { display: none; background: none; border: none; font-size: 1.5rem; color: #1e293b; cursor: pointer; padding: 0.5rem; margin-right: 0.5rem; }
         .sidebar-overlay { display: none; position: fixed; top: 64px; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 998; }
         .main-content { margin-left: 256px; margin-top: 64px; padding: 2rem; transition: margin-left 0.3s ease; }
-        .card { background: #ffffff; border: 1px solid #e2e8f0; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.75rem; }
-        .header h2 { font-size: 1.125rem; font-weight: 600; color: #1e293b; display: flex; align-items: center; gap: 0.5rem; }
-        .header-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-        .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; font-size: 0.875rem; font-weight: 500; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; }
-        .btn-primary { background: #dc2626; color: white; }
-        .btn-primary:hover { background: #b91c1c; }
-        .btn-secondary { background: #64748b; color: white; }
-        .btn-secondary:hover { background: #475569; }
-        .btn-sm { padding: 0.4rem 0.875rem; font-size: 0.75rem; }
-        .btn-edit { background: #3b82f6; color: white; }
-        .btn-delete { background: #ef4444; color: white; }
-        .alert { padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 1rem; }
-        .alert-success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
-        .announcement-card { background: #f8fafc; border: 1px solid #e2e8f0; padding: 1.5rem; border-radius: 8px; margin-bottom: 1rem; }
-        .announcement-card.meeting { border-left: 4px solid #3b82f6; }
-        .announcement-card.urgent { border-left: 4px solid #ef4444; }
-        .announcement-card.general { border-left: 4px solid #fbbf24; }
-        .announcement-card.expired-card { opacity: 0.65; }
-        .announcement-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem; }
-        .announcement-title { font-size: 1.125rem; font-weight: 600; color: #1e293b; }
-        .badges { display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: center; }
-        .badge { padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 500; }
-        .type-general { background: #fef3c7; color: #92400e; }
-        .type-meeting { background: #dbeafe; color: #1e40af; }
-        .type-urgent { background: #fecaca; color: #991b1b; }
-        .badge-expired { background: #fee2e2; color: #991b1b; }
-        .badge-active { background: #dcfce7; color: #166534; }
-        .announcement-content { color: #475569; margin-bottom: 0.75rem; }
-        .announcement-meta { font-size: 0.8rem; color: #64748b; display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 0.5rem; }
-        .announcement-actions { display: flex; gap: 0.5rem; margin-top: 1rem; flex-wrap: wrap; }
         @media (max-width: 768px) {
             .hamburger { display: block; }
             .user-name { display: none; }
@@ -70,9 +40,6 @@
             .sidebar.active { transform: translateX(0); box-shadow: 2px 0 8px rgba(0,0,0,0.1); }
             .sidebar-overlay.active { display: block; }
             .main-content { margin-left: 0; padding: 1rem; }
-            .card { padding: 1rem; }
-            .announcement-card { padding: 1rem; }
-            .announcement-title { font-size: 1rem; }
         }
     </style>
 </head>
@@ -114,71 +81,150 @@
     </div>
 
     <div class="main-content">
+
+        {{-- Page Header --}}
+        <div class="mb-6">
+            <h2 class="text-xl font-semibold text-slate-800">Pengumuman</h2>
+            <p class="text-sm text-slate-500 mt-0.5">Kelola pengumuman yang tampil kepada seluruh karyawan.</p>
+        </div>
+
+        {{-- Alert --}}
         @if(session('success'))
-            <div class="alert alert-success"><i class="fas fa-check-circle"></i> {{ session('success') }}</div>
+            <div class="mb-5 flex items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+                <i class="fas fa-check-circle text-emerald-500"></i>
+                {{ session('success') }}
+            </div>
         @endif
 
-        <div class="card">
-            <div class="header">
-                <h2><i class="fas fa-bullhorn"></i> Daftar Pengumuman</h2>
-                <div class="header-actions">
-                    <a href="{{ route('announcements.trash') }}" class="btn btn-secondary btn-sm">
-                        <i class="fas fa-trash-alt"></i> Sampah
-                    </a>
-                    <a href="{{ route('announcements.create') }}" class="btn btn-primary">
-                        <i class="fas fa-plus"></i> Tambah Pengumuman
-                    </a>
-                </div>
+        {{-- Toolbar --}}
+        <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <p class="text-sm text-slate-500">{{ $announcements->count() }} pengumuman ditemukan</p>
+            <div class="flex items-center gap-2">
+                <a href="{{ route('announcements.trash') }}"
+                   class="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-sm font-medium text-slate-600 shadow-sm transition hover:bg-slate-50">
+                    <i class="fas fa-trash-alt text-slate-400"></i> Sampah
+                </a>
+                <a href="{{ route('announcements.create') }}"
+                   class="inline-flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-red-700">
+                    <i class="fas fa-plus"></i> 
+                </a>
             </div>
+        </div>
 
+        {{-- Announcement List --}}
+        <div class="space-y-4">
             @forelse($announcements as $announcement)
-                <div class="announcement-card {{ $announcement->type }} {{ $announcement->isExpired() ? 'expired-card' : '' }}">
-                    <div class="announcement-header">
-                        <div class="announcement-title">{{ $announcement->title }}</div>
-                        <div class="badges">
-                            <span class="badge type-{{ $announcement->type }}">
-                                @if($announcement->type === 'meeting') <i class="fas fa-calendar"></i> Rapat
-                                @elseif($announcement->type === 'urgent') <i class="fas fa-exclamation-triangle"></i> Mendesak
-                                @else <i class="fas fa-info-circle"></i> Umum
+                @php
+                    $borderColor = match($announcement->type) {
+                        'meeting' => 'border-l-blue-500',
+                        'urgent'  => 'border-l-red-500',
+                        default   => 'border-l-amber-400',
+                    };
+                    $iconBg = match($announcement->type) {
+                        'meeting' => 'bg-blue-100 text-blue-600',
+                        'urgent'  => 'bg-red-100 text-red-600',
+                        default   => 'bg-amber-100 text-amber-600',
+                    };
+                    $icon = match($announcement->type) {
+                        'meeting' => 'fa-calendar-alt',
+                        'urgent'  => 'fa-exclamation-triangle',
+                        default   => 'fa-info-circle',
+                    };
+                    $typeLabel = match($announcement->type) {
+                        'meeting' => 'Rapat',
+                        'urgent'  => 'Mendesak',
+                        default   => 'Umum',
+                    };
+                    $typeBadge = match($announcement->type) {
+                        'meeting' => 'bg-blue-100 text-blue-700',
+                        'urgent'  => 'bg-red-100 text-red-700',
+                        default   => 'bg-amber-100 text-amber-700',
+                    };
+                @endphp
+                <div class="flex gap-4 rounded-xl border border-slate-200 border-l-4 {{ $borderColor }} bg-white p-5 shadow-sm transition hover:shadow-md {{ $announcement->isExpired() ? 'opacity-60' : '' }}">
+
+                    {{-- Icon --}}
+                    <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl {{ $iconBg }}">
+                        <i class="fas {{ $icon }}"></i>
+                    </div>
+
+                    {{-- Body --}}
+                    <div class="min-w-0 flex-1">
+
+                        {{-- Title row --}}
+                        <div class="flex flex-wrap items-start justify-between gap-2">
+                            <h3 class="text-sm font-semibold text-slate-800">{{ $announcement->title }}</h3>
+                            <div class="flex flex-wrap items-center gap-1.5">
+                                <span class="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium {{ $typeBadge }}">
+                                    <i class="fas {{ $icon }} text-[10px]"></i> {{ $typeLabel }}
+                                </span>
+                                @if($announcement->isExpired())
+                                    <span class="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-500">
+                                        <i class="fas fa-clock text-[10px]"></i> Kedaluwarsa
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-medium text-emerald-700">
+                                        <i class="fas fa-check-circle text-[10px]"></i> Aktif
+                                    </span>
                                 @endif
-                            </span>
-                            @if($announcement->isExpired())
-                                <span class="badge badge-expired"><i class="fas fa-clock"></i> Kedaluwarsa</span>
-                            @else
-                                <span class="badge badge-active"><i class="fas fa-check-circle"></i> Aktif</span>
-                            @endif
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="announcement-content">{{ $announcement->content }}</div>
+                        {{-- Content --}}
+                        <p class="mt-1.5 text-sm leading-relaxed text-slate-500">{{ $announcement->content }}</p>
 
-                    <div class="announcement-meta">
-                        @if($announcement->meeting_date)
-                            <span><i class="fas fa-calendar-alt"></i> Rapat: {{ $announcement->meeting_date->locale('id')->isoFormat('D MMMM Y HH:mm') }}</span>
-                        @endif
-                        @if($announcement->expired_at)
-                            <span><i class="fas fa-hourglass-end"></i> Berakhir: {{ $announcement->expired_at->locale('id')->isoFormat('D MMMM Y HH:mm') }}</span>
-                        @else
-                            <span><i class="fas fa-infinity"></i> Tidak ada batas waktu</span>
-                        @endif
-                    </div>
+                        {{-- Meta --}}
+                        <div class="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-400">
+                            @if($announcement->meeting_date)
+                                <span class="flex items-center gap-1">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    Rapat: {{ $announcement->meeting_date->locale('id')->isoFormat('D MMM Y, HH:mm') }}
+                                </span>
+                            @endif
+                            @if($announcement->expired_at)
+                                <span class="flex items-center gap-1">
+                                    <i class="fas fa-hourglass-end"></i>
+                                    Berakhir: {{ $announcement->expired_at->locale('id')->isoFormat('D MMM Y, HH:mm') }}
+                                </span>
+                            @else
+                                <span class="flex items-center gap-1">
+                                    <i class="fas fa-infinity"></i> Tidak ada batas waktu
+                                </span>
+                            @endif
+                            <span class="flex items-center gap-1">
+                                <i class="fas fa-clock"></i>
+                                Dibuat: {{ $announcement->created_at->locale('id')->isoFormat('D MMM Y') }}
+                            </span>
+                        </div>
 
-                    <div class="announcement-actions">
-                        <a href="{{ route('announcements.edit', $announcement->id) }}" class="btn btn-sm btn-edit">
-                            <i class="fas fa-edit"></i> Edit
-                        </a>
-                        <form method="POST" action="{{ route('announcements.destroy', $announcement->id) }}" style="display:inline;">
-                            @csrf @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-delete" onclick="return confirm('Pindahkan ke sampah?')">
-                                <i class="fas fa-trash"></i> Hapus
-                            </button>
-                        </form>
+                        {{-- Actions --}}
+                        <div class="mt-4 flex items-center gap-2">
+                            <a href="{{ route('announcements.edit', $announcement->id) }}"
+                               class="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-blue-700">
+                                <i class="fas fa-edit"></i> 
+                            </a>
+                            <form method="POST" action="{{ route('announcements.destroy', $announcement->id) }}">
+                                @csrf @method('DELETE')
+                                <button type="submit"
+                                    onclick="return confirm('Pindahkan ke sampah?')"
+                                    class="inline-flex items-center gap-1.5 rounded-lg bg-red-50 px-3 py-1.5 text-xs font-medium text-red-600 transition hover:bg-red-100">
+                                    <i class="fas fa-trash"></i> 
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             @empty
-                <div style="text-align:center; padding:3rem; color:#64748b;">
-                    <i class="fas fa-bullhorn" style="font-size:3rem; margin-bottom:1rem; opacity:0.3;"></i>
-                    <p>Belum ada pengumuman.</p>
+                <div class="flex flex-col items-center justify-center rounded-xl border border-dashed border-slate-300 bg-white py-16 text-center">
+                    <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-slate-100">
+                        <i class="fas fa-bullhorn text-2xl text-slate-400"></i>
+                    </div>
+                    <p class="text-sm font-medium text-slate-600">Belum ada pengumuman</p>
+                    <p class="mt-1 text-xs text-slate-400">Klik "Tambah Pengumuman" untuk membuat yang pertama.</p>
+                    <a href="{{ route('announcements.create') }}"
+                       class="mt-4 inline-flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700">
+                        <i class="fas fa-plus"></i> Tambah Pengumuman
+                    </a>
                 </div>
             @endforelse
         </div>
