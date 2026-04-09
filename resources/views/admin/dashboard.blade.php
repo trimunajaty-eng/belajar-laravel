@@ -214,8 +214,8 @@
             <li>
                 <a href="{{ route('admin.leave-requests.index') }}">
                     <i class="fas fa-file-medical-alt"></i> Pengajuan
-                    @if(isset($pendingLeaveCount) && $pendingLeaveCount > 0)
-                        <span style="margin-left:auto;background:#dc2626;color:white;font-size:0.65rem;font-weight:700;border-radius:9999px;min-width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;padding:0 5px;">{{ $pendingLeaveCount }}</span>
+                    @if(!empty($pendingCount) && $pendingCount > 0)
+                        <span style="margin-left:auto;background:#dc2626;color:white;font-size:0.65rem;font-weight:700;border-radius:9999px;min-width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;padding:0 5px;">{{ $pendingCount }}</span>
                     @endif
                 </a>
             </li>

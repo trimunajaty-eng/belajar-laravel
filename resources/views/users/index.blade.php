@@ -77,7 +77,14 @@
             <li><a href="{{ route('work-settings.index') }}"><i class="fas fa-clock"></i> Work Schedule</a></li>
             <li><a href="{{ route('announcements.index') }}"><i class="fas fa-bullhorn"></i> Announcements</a></li>
             <li><a href="{{ route('reports.index') }}"><i class="fas fa-chart-bar"></i> Reports</a></li>
-            <li><a href="{{ route('admin.leave-requests.index') }}"><i class="fas fa-file-medical-alt"></i> Pengajuan</a></li>
+            <li>
+                <a href="{{ route('admin.leave-requests.index') }}">
+                    <i class="fas fa-file-medical-alt"></i> Pengajuan
+                    @if(!empty($pendingCount) && $pendingCount > 0)
+                        <span style="margin-left:auto;background:#dc2626;color:white;font-size:0.65rem;font-weight:700;border-radius:9999px;min-width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;padding:0 5px;">{{ $pendingCount }}</span>
+                    @endif
+                </a>
+            </li>
             <li><a href="{{ route('settings.index') }}"><i class="fas fa-cog"></i> Settings</a></li>
         </ul>
     </div>
