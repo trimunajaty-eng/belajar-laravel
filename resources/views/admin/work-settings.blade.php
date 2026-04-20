@@ -35,9 +35,15 @@
         .sidebar i { width: 18px; text-align: center; font-size: 0.875rem; }
         
         .hamburger { display: none; background: none; border: none; font-size: 1.5rem; color: #1e293b; cursor: pointer; padding: 0.5rem; margin-right: 0.5rem; }
-        .sidebar-overlay { display: none; position: fixed; top: 64px; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 998; }
+        .sidebar-overlay { position: fixed; top: 64px; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 998; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        .sidebar-overlay.active { opacity: 1; pointer-events: auto; }
         
-        .main-content { margin-left: 256px; margin-top: 64px; padding: 2rem; transition: margin-left 0.3s ease; }
+        .main-content { margin-left: 256px; margin-top: 64px; padding: 2rem; transition: margin-left 0.3s ease, filter 0.3s ease; }
+        .main-content.blurred { filter: blur(3px); pointer-events: none; }
+        
+        body { opacity: 0; animation: pageFadeIn 0.22s ease forwards; }
+        @keyframes pageFadeIn { to { opacity: 1; } }
+        .page-leaving { opacity: 0; transition: opacity 0.18s ease; }
         .card { background: #ffffff; border: 1px solid #e2e8f0; padding: 2rem; border-radius: 12px; margin-bottom: 2rem; }
         .card h3 { color: #1e293b; margin-bottom: 1.5rem; font-size: 1.25rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; }
         
@@ -74,10 +80,8 @@
             .logout-btn { padding: 0.5rem 0.75rem; font-size: 0.75rem; }
             .logout-btn span { display: none; }
             
-            .sidebar { transform: translateX(-100%); }
+            .sidebar { transform: translateX(-100%); will-change: transform; }
             .sidebar.active { transform: translateX(0); box-shadow: 2px 0 8px rgba(0,0,0,0.1); }
-            .sidebar-overlay.active { display: block; }
-            
             .main-content { margin-left: 0; padding: 1rem; }
             
             .card { padding: 1rem; }
@@ -267,9 +271,38 @@
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.querySelector('.sidebar-overlay');
+            const main = document.querySelector('.main-content');
+            const isOpening = !sidebar.classList.contains('active');
             sidebar.classList.toggle('active');
             overlay.classList.toggle('active');
+            if (window.innerWidth <= 768) {
+                main.classList.toggle('blurred', isOpening);
+                sessionStorage.setItem('sidebarOpen', isOpening ? '1' : '0');
+            }
         }
+
+        (function restoreSidebar() {
+            if (window.innerWidth > 768) return;
+            if (sessionStorage.getItem('sidebarOpen') !== '1') return;
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            const main = document.querySelector('.main-content');
+            sidebar.style.transition = 'none';
+            sidebar.classList.add('active');
+            overlay.classList.add('active');
+            main.classList.add('blurred');
+            requestAnimationFrame(() => { sidebar.style.transition = ''; });
+        })();
+
+        document.querySelectorAll('.sidebar a[href]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (!href || href.startsWith('#') || href.startsWith('javascript')) return;
+                e.preventDefault();
+                document.body.classList.add('page-leaving');
+                setTimeout(() => { window.location.href = href; }, 180);
+            });
+        });
 
         function toggleDropdown() {
             const dropdown = document.getElementById('dropdownMenu');
