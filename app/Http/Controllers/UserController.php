@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\LeaveRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -11,7 +12,8 @@ class UserController extends Controller
     public function index()
     {
         $users = User::where('role', '!=', 'admin')->paginate(10);
-        return view('users.index', compact('users'));
+        $pendingCount = LeaveRequest::where('status', 'pending')->count();
+        return view('users.index', compact('users', 'pendingCount'));
     }
 
     public function create()
