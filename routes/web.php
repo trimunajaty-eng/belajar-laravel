@@ -11,6 +11,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\Employee\PasswordController;
 use App\Http\Controllers\Employee\LeaveRequestController;
+use App\Http\Controllers\Employee\ProfileController;
 use App\Http\Controllers\Admin\LeaveRequestController as AdminLeaveRequestController;
 
 Route::get('/', function () {
@@ -29,6 +30,9 @@ Route::middleware('auth')->group(function () {
     
     Route::get('/employee/change-password', [PasswordController::class, 'edit'])->name('employee.change-password');
     Route::post('/employee/change-password', [PasswordController::class, 'update'])->name('employee.change-password.update');
+
+    Route::get('/employee/profile', [ProfileController::class, 'show'])->name('employee.profile');
+    Route::post('/employee/profile/upload-photo', [ProfileController::class, 'uploadPhoto'])->name('employee.profile.upload-photo');
 
     Route::get('/employee/leave-requests', [LeaveRequestController::class, 'index'])->name('employee.leave-requests.index');
     Route::get('/employee/leave-requests/create', [LeaveRequestController::class, 'create'])->name('employee.leave-requests.create');

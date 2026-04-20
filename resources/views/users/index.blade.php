@@ -147,9 +147,14 @@
                             {{-- Name --}}
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xs font-semibold flex-shrink-0">
-                                        {{ strtoupper(substr($user->name, 0, 1)) }}
-                                    </div>
+                                    @if($user->profile_photo)
+                                        <img src="{{ Storage::url($user->profile_photo) }}" alt="Foto"
+                                             class="w-8 h-8 rounded-full object-cover flex-shrink-0 ring-2 ring-slate-100">
+                                    @else
+                                        <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xs font-semibold flex-shrink-0">
+                                            {{ strtoupper(substr($user->name, 0, 1)) }}
+                                        </div>
+                                    @endif
                                     <span class="text-sm font-medium text-slate-800">{{ $user->name }}</span>
                                 </div>
                             </td>

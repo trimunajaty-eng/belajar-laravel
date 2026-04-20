@@ -26,14 +26,24 @@
 
             <div class="relative flex items-center">
                 <div onclick="toggleDropdown()" class="flex cursor-pointer items-center gap-2 rounded-xl border border-transparent px-2 py-2 transition hover:border-slate-200 hover:bg-slate-50 sm:gap-3">
-                    <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-600 text-sm font-medium text-white">
-                        {{ substr(Auth::user()->name, 0, 1) }}
-                    </div>
+                    @if(Auth::user()->profile_photo)
+                        <img src="{{ Storage::url(Auth::user()->profile_photo) }}" alt="Foto Profil"
+                             class="h-9 w-9 rounded-xl object-cover ring-2 ring-emerald-100">
+                    @else
+                        <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-600 text-sm font-medium text-white">
+                            {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                        </div>
+                    @endif
                     <span class="hidden text-sm font-medium text-slate-700 sm:inline">{{ Auth::user()->name }}</span>
                     <i class="fas fa-chevron-down text-xs text-slate-400 transition-transform duration-300" id="chevron"></i>
                 </div>
 
                 <div id="dropdownMenu" class="invisible absolute right-0 top-full z-50 mt-3 w-52 translate-y-2 rounded-2xl border border-slate-200 bg-white p-2 opacity-0 shadow-xl transition-all duration-300">
+                    <a href="{{ route('employee.profile') }}" class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-700 transition hover:bg-slate-50">
+                        <i class="fas fa-user text-emerald-500"></i>
+                        <span>Profile</span>
+                    </a>
+
                     <a href="{{ route('employee.change-password') }}" class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-700 transition hover:bg-slate-50">
                         <i class="fas fa-cog text-blue-500"></i>
                         <span>Pengaturan</span>
